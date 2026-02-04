@@ -3,37 +3,118 @@
 <head>
 <meta charset="UTF-8">
 <title>Philadelphia RP Law Book</title>
+
 <style>
+:root {
+  --bg: #0b0e14;
+  --panel: #121826;
+  --border: #1f2a44;
+  --accent: #4da6ff;
+  --text: #e6e9ef;
+  --muted: #9aa4bf;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background:#0f1115;
-  color:#eaeaea;
-  padding:20px;
+  margin: 0;
+  padding: 30px;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
 }
+
 h1 {
-  text-align:center;
+  text-align: center;
+  margin-bottom: 6px;
 }
-details {
-  margin-bottom: 14px;
-  border: 1px solid #333;
-  border-radius: 6px;
-  padding: 10px;
-  background:#161a22;
+
+.subtitle {
+  text-align: center;
+  color: var(--muted);
+  margin-bottom: 30px;
 }
-summary {
-  font-size: 18px;
-  font-weight: bold;
+
+/* CATEGORY ACCORDION */
+.category {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.category summary {
+  list-style: none;
   cursor: pointer;
+  padding: 18px 20px;
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+
+.category summary:hover {
+  background: rgba(255,255,255,0.03);
+}
+
+.category summary::marker {
+  display: none;
+}
+
+.chevron {
+  transition: transform 0.3s ease;
+}
+
+.category[open] .chevron {
+  transform: rotate(90deg);
+}
+
+/* LAW ITEMS */
 .law {
-  margin-left: 20px;
-  margin-top: 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px dashed #333;
+  margin: 0 20px 16px 20px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #0f1424;
+  animation: fadeIn 0.35s ease;
 }
+
+.law-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
 .tag {
-  color:#4da6ff;
-  font-weight:bold;
+  display: inline-block;
+  margin-bottom: 6px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+ul {
+  margin: 6px 0 0 18px;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 4px;
+}
+
+/* ANIMATION */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>
 </head>
@@ -41,152 +122,194 @@ summary {
 <body>
 
 <h1>📘 Philadelphia RP Law Book</h1>
-<p style="text-align:center;">Bonelab-Compatible • RP-Safe • Click Categories to Expand</p>
+<div class="subtitle">Imperial CAD–Style • Bonelab Compatible • Click to Expand</div>
 
-<details>
-<summary>🚨 Disturbance & Public Order</summary>
+<!-- DISTURBANCE -->
+<details class="category">
+  <summary>
+    🚨 Disturbance & Public Order
+    <span class="chevron">▶</span>
+  </summary>
 
-<div class="law">
-<b>Disorderly Conduct</b><br>
-<span class="tag">Arrestable</span><br>
-• Violent, threatening, or disruptive behavior in public<br>
-• Causes alarm or interferes with others
-</div>
+  <div class="law">
+    <div class="law-title">Disorderly Conduct</div>
+    <div class="tag">Arrestable</div>
+    <ul>
+      <li>Violent, threatening, or disruptive behavior</li>
+      <li>Causes public alarm or interferes with others</li>
+    </ul>
+  </div>
 
-<div class="law">
-<b>Public Disturbance</b><br>
-<span class="tag">Arrestable</span><br>
-• Loud, abusive, or aggressive conduct<br>
-• Refusal to comply with lawful orders
-</div>
+  <div class="law">
+    <div class="law-title">Public Disturbance</div>
+    <div class="tag">Arrestable</div>
+    <ul>
+      <li>Loud, abusive, or aggressive conduct</li>
+      <li>Refusal to comply with lawful orders</li>
+    </ul>
+  </div>
 
-<div class="law">
-<b>Unlawful Assembly</b><br>
-<span class="tag">Arrestable</span><br>
-• Three or more persons<br>
-• Failure to disperse when ordered
-</div>
+  <div class="law">
+    <div class="law-title">Unlawful Assembly</div>
+    <div class="tag">Arrestable</div>
+    <ul>
+      <li>Three or more persons</li>
+      <li>Failure to disperse when ordered</li>
+    </ul>
+  </div>
 </details>
 
-<details>
-<summary>🍺 Intoxication & Substances</summary>
+<!-- INTOXICATION -->
+<details class="category">
+  <summary>
+    🍺 Intoxication & Substances
+    <span class="chevron">▶</span>
+  </summary>
 
-<div class="law">
-<b>Public Intoxication</b><br>
-<span class="tag">Arrestable</span><br>
-• Subject impaired in public<br>
-• Poses danger to self or others
-</div>
+  <div class="law">
+    <div class="law-title">Public Intoxication</div>
+    <div class="tag">Arrestable</div>
+    <ul>
+      <li>Impaired in a public place</li>
+      <li>Poses danger to self or others</li>
+    </ul>
+  </div>
 
-<div class="law">
-<b>DUI</b><br>
-<span class="tag">Arrestable</span><br>
-• Operating vehicle while impaired
-</div>
+  <div class="law">
+    <div class="law-title">Driving Under the Influence (DUI)</div>
+    <div class="tag">Arrestable</div>
+    <ul>
+      <li>Operating a vehicle while impaired</li>
+    </ul>
+  </div>
 
-<div class="law">
-<b>Possession of Controlled Substance</b><br>
-<span class="tag">Arrestable</span><br>
-• Knowingly possessing illegal substances
-</div>
+  <div class="law">
+    <div class="law-title">Possession of Controlled Substance</div>
+    <div class="tag">Arrestable</div>
+    <ul>
+      <li>Knowingly possessing illegal substances</li>
+    </ul>
+  </div>
 </details>
 
-<details>
-<summary>🚗 Traffic & Vehicles</summary>
+<!-- TRAFFIC -->
+<details class="category">
+  <summary>
+    🚗 Traffic & Vehicles
+    <span class="chevron">▶</span>
+  </summary>
 
-<div class="law">
-<b>Reckless Driving</b><br>
-<span class="tag">Arrestable</span><br>
-• Willful disregard for safety
-</div>
+  <div class="law">
+    <div class="law-title">Reckless Driving</div>
+    <div class="tag">Arrestable</div>
+    <ul>
+      <li>Willful disregard for safety</li>
+    </ul>
+  </div>
 
-<div class="law">
-<b>Evading Police</b><br>
-<span class="tag">Arrestable</span><br>
-• Failure to stop when signaled by law enforcement
-</div>
+  <div class="law">
+    <div class="law-title">Evading Law Enforcement</div>
+    <div class="tag">Arrestable</div>
+    <ul>
+      <li>Failure to stop when signaled</li>
+    </ul>
+  </div>
 
-<div class="law">
-<b>Hit and Run</b><br>
-<span class="tag">Arrestable</span><br>
-• Leaving scene of a collision
-</div>
+  <div class="law">
+    <div class="law-title">Hit and Run</div>
+    <div class="tag">Arrestable</div>
+    <ul>
+      <li>Leaving scene of a collision</li>
+    </ul>
+  </div>
 </details>
 
-<details>
-<summary>🔫 Weapons Offenses</summary>
+<!-- WEAPONS -->
+<details class="category">
+  <summary>
+    🔫 Weapons Offenses
+    <span class="chevron">▶</span>
+  </summary>
 
-<div class="law">
-<b>Brandishing a Weapon</b><br>
-<span class="tag">Arrestable</span><br>
-• Displaying weapon in a threatening manner
-</div>
+  <div class="law">
+    <div class="law-title">Brandishing a Weapon</div>
+    <div class="tag">Arrestable</div>
+    <ul>
+      <li>Displaying weapon in a threatening manner</li>
+    </ul>
+  </div>
 
-<div class="law">
-<b>Discharge of Firearm in City Limits</b><br>
-<span class="tag">Arrestable</span><br>
-• Unlawful discharge of a firearm
-</div>
+  <div class="law">
+    <div class="law-title">Discharge of Firearm in City Limits</div>
+    <div class="tag">Arrestable</div>
+    <ul>
+      <li>Unlawful discharge of a firearm</li>
+    </ul>
+  </div>
 </details>
 
-<details>
-<summary>🏠 Property Crimes</summary>
+<!-- PROPERTY -->
+<details class="category">
+  <summary>
+    🏠 Property Crimes
+    <span class="chevron">▶</span>
+  </summary>
 
-<div class="law">
-<b>Theft</b><br>
-<span class="tag">Arrestable</span><br>
-• Taking property without consent
-</div>
+  <div class="law">
+    <div class="law-title">Theft</div>
+    <div class="tag">Arrestable</div>
+    <ul>
+      <li>Taking property without consent</li>
+    </ul>
+  </div>
 
-<div class="law">
-<b>Burglary</b><br>
-<span class="tag">Arrestable</span><br>
-• Unlawful entry with intent to commit a crime
-</div>
+  <div class="law">
+    <div class="law-title">Burglary</div>
+    <div class="tag">Arrestable</div>
+    <ul>
+      <li>Unlawful entry with intent to commit crime</li>
+    </ul>
+  </div>
 
-<div class="law">
-<b>Vandalism</b><br>
-<span class="tag">Arrestable</span><br>
-• Damaging property without permission
-</div>
+  <div class="law">
+    <div class="law-title">Vandalism</div>
+    <div class="tag">Arrestable</div>
+    <ul>
+      <li>Damaging property without permission</li>
+    </ul>
+  </div>
 </details>
 
-<details>
-<summary>🧍 Crimes Against Persons</summary>
+<!-- PERSON CRIMES -->
+<details class="category">
+  <summary>
+    🧍 Crimes Against Persons
+    <span class="chevron">▶</span>
+  </summary>
 
-<div class="law">
-<b>Assault</b><br>
-<span class="tag">Arrestable</span><br>
-• Causing fear of imminent harm
-</div>
+  <div class="law">
+    <div class="law-title">Assault</div>
+    <div class="tag">Arrestable</div>
+    <ul>
+      <li>Causing fear of imminent harm</li>
+    </ul>
+  </div>
 
-<div class="law">
-<b>Battery</b><br>
-<span class="tag">Arrestable</span><br>
-• Unlawful physical contact
-</div>
+  <div class="law">
+    <div class="law-title">Battery</div>
+    <div class="tag">Arrestable</div>
+    <ul>
+      <li>Unlawful physical contact</li>
+    </ul>
+  </div>
 
-<div class="law">
-<b>Domestic Violence</b><br>
-<span class="tag">Arrestable</span><br>
-• Assault or battery against household member
-</div>
-</details>
-
-<details>
-<summary>⚖️ Justice & Administration</summary>
-
-<div class="law">
-<b>Resisting Arrest</b><br>
-<span class="tag">Arrestable</span><br>
-• Physical or active resistance
-</div>
-
-<div class="law">
-<b>Obstruction of Justice</b><br>
-<span class="tag">Arrestable</span><br>
-• Interfering with law enforcement duties
-</div>
+  <div class="law">
+    <div class="law-title">Domestic Violence</div>
+    <div class="tag">Arrestable</div>
+    <ul>
+      <li>Violence against household member</li>
+    </ul>
+  </div>
 </details>
 
 </body>
