@@ -2,38 +2,34 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Philadelphia RP CAD – Laws</title>
+<title>Philadelphia RP CAD – Law Database</title>
 
 <style>
 body {
   margin: 0;
   font-family: "Segoe UI", Arial, sans-serif;
-  background: #0c0f14;
-  color: #e6e9ef;
+  background: #eef1f5;
+  color: #1f2937;
 }
 
 /* TOP BAR */
 .topbar {
   height: 52px;
-  background: #1b2a44;
+  background: #2b4c7e;
   display: flex;
   align-items: center;
   padding: 0 14px;
   gap: 10px;
-  border-bottom: 1px solid #263a5e;
+  color: white;
 }
 
 .topbar button {
-  background: #233a63;
-  border: 1px solid #2f4f86;
-  color: #e6e9ef;
+  background: #3b6fb6;
+  border: none;
+  color: white;
   padding: 6px 12px;
   border-radius: 4px;
   cursor: pointer;
-}
-
-.topbar button:hover {
-  background: #2d4f8f;
 }
 
 /* LAYOUT */
@@ -44,89 +40,116 @@ body {
 
 /* SIDEBAR */
 .sidebar {
-  width: 240px;
-  background: #0f1625;
-  border-right: 1px solid #263a5e;
+  width: 220px;
+  background: #f4f6f9;
+  border-right: 1px solid #d0d7e2;
   padding: 10px;
 }
 
-.sidebar h3 {
-  font-size: 14px;
-  color: #9aa4bf;
-  margin-bottom: 8px;
-}
-
-.category {
+.sidebar div {
   padding: 10px;
   border-radius: 4px;
   cursor: pointer;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
-.category:hover {
-  background: #1b2a44;
+.sidebar div:hover {
+  background: #dde6f5;
 }
 
-.category.active {
-  background: #2d4f8f;
+.sidebar .active {
+  background: #c8dbf8;
+  font-weight: bold;
 }
 
-/* MAIN PANEL */
+/* MAIN */
 .main {
   flex: 1;
-  padding: 20px;
-  background: #0c0f14;
-  animation: fadeIn 0.25s ease;
+  padding: 16px;
 }
 
-.law-title {
-  font-size: 20px;
-  margin-bottom: 6px;
+/* TABLE */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
 }
 
-.tag {
-  color: #4da6ff;
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+th {
+  background: #f1f5f9;
+}
+
+tr:hover {
+  background: #f9fafb;
+  cursor: pointer;
+}
+
+/* BADGES */
+.badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
   font-weight: bold;
-  margin-bottom: 10px;
 }
 
-ul {
-  margin-left: 20px;
+.arrest {
+  background: #d1fae5;
+  color: #065f46;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateX(6px); }
-  to { opacity: 1; transform: translateX(0); }
+.citation {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* DETAILS PANEL */
+.details {
+  margin-top: 14px;
+  background: white;
+  border: 1px solid #d1d5db;
+  padding: 14px;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.details.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>
 
 <script>
-function showLaw(title, arrestable, elements) {
-  const main = document.getElementById("main");
-  main.innerHTML = `
-    <div class="law-title">${title}</div>
-    <div class="tag">Arrestable: ${arrestable}</div>
-    <ul>
-      ${elements.map(e => `<li>${e}</li>`).join("")}
-    </ul>
-  `;
-}
+function showDetails(title, level, arrestable, elements) {
+  const panel = document.getElementById("details");
 
-function setActive(el) {
-  document.querySelectorAll(".category").forEach(c => c.classList.remove("active"));
-  el.classList.add("active");
+  // reset animation
+  panel.classList.remove("show");
+  void panel.offsetWidth; // force reflow
+
+  panel.innerHTML = `
+    <h3>${title}</h3>
+    <p><b>Level:</b> ${level}</p>
+    <p><b>Arrestable:</b> ${arrestable}</p>
+    <ul>${elements.map(e => `<li>${e}</li>`).join("")}</ul>
+  `;
+
+  panel.classList.add("show");
 }
 </script>
 </head>
 
 <body>
 
-<!-- TOP BAR -->
 <div class="topbar">
-  <button>Log Out</button>
   <button>CAD</button>
   <button>Search</button>
-  <button>Returns</button>
   <button><b>Laws</b></button>
 </div>
 
@@ -134,46 +157,81 @@ function setActive(el) {
 
 <!-- SIDEBAR -->
 <div class="sidebar">
-  <h3>LAW CATEGORIES</h3>
-
-  <div class="category" onclick="setActive(this); showLaw(
-    'Disorderly Conduct',
-    'YES',
-    ['Disruptive behavior in public','Causes alarm or interferes with others']
-  )">Disturbance</div>
-
-  <div class="category" onclick="setActive(this); showLaw(
-    'Public Intoxication',
-    'YES',
-    ['Impaired in public','Danger to self or others']
-  )">Intoxication</div>
-
-  <div class="category" onclick="setActive(this); showLaw(
-    'Reckless Driving',
-    'YES',
-    ['Willful disregard for safety']
-  )">Traffic</div>
-
-  <div class="category" onclick="setActive(this); showLaw(
-    'Brandishing a Weapon',
-    'YES',
-    ['Weapon displayed in threatening manner']
-  )">Weapons</div>
-
-  <div class="category" onclick="setActive(this); showLaw(
-    'Theft',
-    'YES',
-    ['Taking property without consent']
-  )">Property</div>
-
+  <div class="active">Disturbance</div>
+  <div>Intoxication</div>
+  <div>Traffic</div>
+  <div>Weapons</div>
+  <div>Property</div>
+  <div>Persons</div>
 </div>
 
 <!-- MAIN -->
-<div class="main" id="main">
-  <div class="law-title">Select a Law</div>
-  <p class="tag">Choose a category from the left.</p>
+<div class="main">
+
+<table>
+<tr>
+  <th>Code</th>
+  <th>Law</th>
+  <th>Level</th>
+  <th>Type</th>
+</tr>
+
+<tr onclick="showDetails(
+  'Disorderly Conduct',
+  'Misdemeanor',
+  'Yes',
+  ['Disruptive public behavior','Causes alarm or interference']
+)">
+  <td>DC-01</td>
+  <td>Disorderly Conduct</td>
+  <td>M</td>
+  <td><span class="badge arrest">Arrest</span></td>
+</tr>
+
+<tr onclick="showDetails(
+  'Public Intoxication',
+  'Misdemeanor',
+  'Yes',
+  ['Impaired in public','Danger to self or others']
+)">
+  <td>INT-02</td>
+  <td>Public Intoxication</td>
+  <td>M</td>
+  <td><span class="badge arrest">Arrest</span></td>
+</tr>
+
+<tr onclick="showDetails(
+  'Reckless Driving',
+  'Misdemeanor',
+  'Yes',
+  ['Willful disregard for safety']
+)">
+  <td>TR-04</td>
+  <td>Reckless Driving</td>
+  <td>M</td>
+  <td><span class="badge arrest">Arrest</span></td>
+</tr>
+
+<tr onclick="showDetails(
+  'Speeding',
+  'Infraction',
+  'No',
+  ['Exceeding posted limit']
+)">
+  <td>TR-01</td>
+  <td>Speeding</td>
+  <td>I</td>
+  <td><span class="badge citation">Citation</span></td>
+</tr>
+
+</table>
+
+<div id="details" class="details">
+  <i>Select a law to view details.</i>
 </div>
 
 </div>
+</div>
+
 </body>
 </html>
