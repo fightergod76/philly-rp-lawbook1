@@ -32,14 +32,14 @@ body {
 
 /* SIDEBAR */
 .sidebar {
-  width: 240px;
+  width: 260px;
   background: #e5e7eb;
   border-right: 1px solid #d1d5db;
-  padding: 12px;
+  padding: 14px;
 }
 
 .sidebar h4 {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .sidebar input {
@@ -47,6 +47,7 @@ body {
   padding: 8px;
   border-radius: 4px;
   border: 1px solid #9ca3af;
+  font-size: 14px;
 }
 
 /* MAIN */
@@ -70,6 +71,7 @@ th, td {
 
 th {
   background: #f9fafb;
+  text-align: left;
 }
 
 tr {
@@ -100,7 +102,7 @@ tr:hover {
   padding: 14px;
   opacity: 0;
   transform: translateY(-8px);
-  transition: all 0.25s ease;
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
 .details.show {
@@ -113,20 +115,29 @@ tr:hover {
 const laws = [
   {code:"DC-01", name:"Disorderly Conduct", level:"M", type:"Arrest", elements:["Disruptive public behavior","Causes alarm or interference"]},
   {code:"DC-02", name:"Public Disturbance", level:"M", type:"Arrest", elements:["Loud or aggressive behavior","Refusal to comply"]},
+  {code:"DC-03", name:"Unlawful Assembly", level:"M", type:"Arrest", elements:["Three or more persons","Failure to disperse"]},
+
   {code:"INT-01", name:"Public Intoxication", level:"M", type:"Arrest", elements:["Impaired in public","Danger to self or others"]},
   {code:"INT-02", name:"DUI", level:"F", type:"Arrest", elements:["Operating vehicle","Impaired by alcohol or drugs"]},
   {code:"INT-03", name:"Possession of Controlled Substance", level:"F", type:"Arrest", elements:["Knowingly possessing illegal substances"]},
+
   {code:"TR-01", name:"Speeding", level:"I", type:"Citation", elements:["Exceeding posted speed limit"]},
   {code:"TR-02", name:"Reckless Driving", level:"M", type:"Arrest", elements:["Willful disregard for safety"]},
   {code:"TR-03", name:"Evading Law Enforcement", level:"F", type:"Arrest", elements:["Failure to stop when signaled"]},
+  {code:"TR-04", name:"Hit and Run", level:"F", type:"Arrest", elements:["Leaving scene of collision"]},
+
   {code:"WP-01", name:"Brandishing a Weapon", level:"F", type:"Arrest", elements:["Weapon displayed in threatening manner"]},
   {code:"WP-02", name:"Illegal Firearm Possession", level:"F", type:"Arrest", elements:["Possession of prohibited weapon"]},
+  {code:"WP-03", name:"Discharge of Firearm in City Limits", level:"F", type:"Arrest", elements:["Unlawful discharge"]},
+
   {code:"PR-01", name:"Theft", level:"M", type:"Arrest", elements:["Taking property without consent"]},
   {code:"PR-02", name:"Burglary", level:"F", type:"Arrest", elements:["Unlawful entry","Intent to commit crime"]},
   {code:"PR-03", name:"Vandalism", level:"M", type:"Arrest", elements:["Property damage"]},
+
   {code:"PS-01", name:"Assault", level:"M", type:"Arrest", elements:["Threat of imminent harm"]},
   {code:"PS-02", name:"Battery", level:"M", type:"Arrest", elements:["Unlawful physical contact"]},
   {code:"PS-03", name:"Domestic Violence", level:"F", type:"Arrest", elements:["Violence against household member"]},
+
   {code:"JU-01", name:"Resisting Arrest", level:"M", type:"Arrest", elements:["Physical resistance"]},
   {code:"JU-02", name:"Obstruction of Justice", level:"F", type:"Arrest", elements:["Interfering with law enforcement"]},
 ];
