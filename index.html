@@ -114,59 +114,90 @@ tr:hover {
 <script>
 const laws = [
 
-/* ───────── DISTURBANCE & PUBLIC ORDER ───────── */
-{code:"DC-01", name:"Disorderly Conduct", level:"M", type:"Arrest", elements:["Disruptive public behavior","Causes alarm or interference"]},
-{code:"DC-02", name:"Public Disturbance", level:"M", type:"Arrest", elements:["Loud or aggressive behavior","Refusal to comply"]},
-{code:"DC-03", name:"Unlawful Assembly", level:"M", type:"Arrest", elements:["Three or more persons","Failure to disperse"]},
-{code:"DC-04", name:"Failure to Obey Lawful Order", level:"M", type:"Arrest", elements:["Refusal to follow lawful command"]},
-{code:"DC-05", name:"Harassment", level:"M", type:"Arrest", elements:["Repeated unwanted behavior"]},
+/* ───── DISTURBANCE & PUBLIC ORDER (10) ───── */
+{code:"DC-01", name:"Disorderly Conduct", level:"M", type:"Arrest", elements:["Disruptive public behavior"]},
+{code:"DC-02", name:"Public Disturbance", level:"M", type:"Arrest", elements:["Loud or aggressive conduct"]},
+{code:"DC-03", name:"Unlawful Assembly", level:"M", type:"Arrest", elements:["Failure to disperse"]},
+{code:"DC-04", name:"Failure to Obey Lawful Order", level:"M", type:"Arrest", elements:["Refusal of lawful command"]},
+{code:"DC-05", name:"Harassment", level:"M", type:"Arrest", elements:["Repeated unwanted actions"]},
+{code:"DC-06", name:"Loitering", level:"I", type:"Citation", elements:["Remaining without purpose"]},
+{code:"DC-07", name:"Panhandling Aggressively", level:"M", type:"Arrest", elements:["Threatening solicitation"]},
+{code:"DC-08", name:"False Emergency Report", level:"F", type:"Arrest", elements:["Knowingly false report"]},
+{code:"DC-09", name:"Public Nuisance", level:"M", type:"Arrest", elements:["Interferes with public safety"]},
+{code:"DC-10", name:"Riot Participation", level:"F", type:"Arrest", elements:["Violent group conduct"]},
 
-/* ───────── INTOXICATION & DRUGS ───────── */
-{code:"INT-01", name:"Public Intoxication", level:"M", type:"Arrest", elements:["Impaired in public","Danger to self or others"]},
-{code:"INT-02", name:"Driving Under the Influence (DUI)", level:"F", type:"Arrest", elements:["Operating vehicle","Impaired by alcohol or drugs"]},
-{code:"INT-03", name:"Possession of Controlled Substance", level:"F", type:"Arrest", elements:["Knowingly possessing illegal substances"]},
-{code:"INT-04", name:"Possession With Intent to Distribute", level:"F", type:"Arrest", elements:["Large quantity","Packaging or distribution indicators"]},
-{code:"INT-05", name:"Drug Paraphernalia Possession", level:"M", type:"Arrest", elements:["Possession of drug-use equipment"]},
+/* ───── INTOXICATION & NARCOTICS (12) ───── */
+{code:"INT-01", name:"Public Intoxication", level:"M", type:"Arrest", elements:["Impaired in public"]},
+{code:"INT-02", name:"DUI", level:"F", type:"Arrest", elements:["Operating vehicle while impaired"]},
+{code:"INT-03", name:"Drug Possession (Low)", level:"M", type:"Arrest", elements:["Small quantity"]},
+{code:"INT-04", name:"Drug Possession (High)", level:"F", type:"Arrest", elements:["Large quantity"]},
+{code:"INT-05", name:"Possession w/ Intent to Distribute", level:"F", type:"Arrest", elements:["Packaging or scales"]},
+{code:"INT-06", name:"Drug Paraphernalia", level:"M", type:"Arrest", elements:["Use equipment"]},
+{code:"INT-07", name:"Controlled Substance Manufacturing", level:"F", type:"Arrest", elements:["Illegal production"]},
+{code:"INT-08", name:"Selling Controlled Substances", level:"F", type:"Arrest", elements:["Distribution"]},
+{code:"INT-09", name:"Under the Influence (Non-Vehicle)", level:"M", type:"Arrest", elements:["Impaired behavior"]},
+{code:"INT-10", name:"Open Container", level:"I", type:"Citation", elements:["Alcohol in public"]},
+{code:"INT-11", name:"Minor in Possession", level:"M", type:"Arrest", elements:["Underage alcohol"]},
+{code:"INT-12", name:"Drug House Operation", level:"F", type:"Arrest", elements:["Location for narcotics"]},
 
-/* ───────── TRAFFIC & VEHICLE ───────── */
-{code:"TR-01", name:"Speeding", level:"I", type:"Citation", elements:["Exceeding posted speed limit"]},
-{code:"TR-02", name:"Reckless Driving", level:"M", type:"Arrest", elements:["Willful disregard for safety"]},
-{code:"TR-03", name:"Evading Law Enforcement", level:"F", type:"Arrest", elements:["Failure to stop when signaled"]},
-{code:"TR-04", name:"Hit and Run", level:"F", type:"Arrest", elements:["Leaving scene of collision"]},
-{code:"TR-05", name:"Driving While License Suspended", level:"M", type:"Arrest", elements:["Operating vehicle with suspended license"]},
-{code:"TR-06", name:"Street Racing", level:"F", type:"Arrest", elements:["Engaging in illegal race"]},
-{code:"TR-07", name:"Failure to Yield Emergency Vehicle", level:"M", type:"Arrest", elements:["Did not yield to emergency response"]},
+/* ───── TRAFFIC & VEHICLE (14) ───── */
+{code:"TR-01", name:"Speeding", level:"I", type:"Citation", elements:["Above limit"]},
+{code:"TR-02", name:"Reckless Driving", level:"M", type:"Arrest", elements:["Disregard safety"]},
+{code:"TR-03", name:"Evading Law Enforcement", level:"F", type:"Arrest", elements:["Failure to stop"]},
+{code:"TR-04", name:"Hit and Run", level:"F", type:"Arrest", elements:["Leaving collision"]},
+{code:"TR-05", name:"Driving While Suspended", level:"M", type:"Arrest", elements:["Invalid license"]},
+{code:"TR-06", name:"Street Racing", level:"F", type:"Arrest", elements:["Illegal race"]},
+{code:"TR-07", name:"Failure to Yield Emergency Vehicle", level:"M", type:"Arrest", elements:["Did not yield"]},
+{code:"TR-08", name:"Improper Lane Change", level:"I", type:"Citation", elements:["Unsafe lane change"]},
+{code:"TR-09", name:"Running Red Light", level:"I", type:"Citation", elements:["Signal violation"]},
+{code:"TR-10", name:"Driving Without Insurance", level:"M", type:"Arrest", elements:["No coverage"]},
+{code:"TR-11", name:"Vehicular Assault", level:"F", type:"Arrest", elements:["Injury caused"]},
+{code:"TR-12", name:"Vehicular Manslaughter", level:"F", type:"Arrest", elements:["Fatal collision"]},
+{code:"TR-13", name:"Illegal Vehicle Modification", level:"M", type:"Arrest", elements:["Unauthorized mod"]},
+{code:"TR-14", name:"Stolen Vehicle Operation", level:"F", type:"Arrest", elements:["Driving stolen car"]},
 
-/* ───────── WEAPONS ───────── */
-{code:"WP-01", name:"Brandishing a Weapon", level:"F", type:"Arrest", elements:["Weapon displayed in threatening manner"]},
-{code:"WP-02", name:"Illegal Firearm Possession", level:"F", type:"Arrest", elements:["Possession of prohibited weapon"]},
+/* ───── WEAPONS (10) ───── */
+{code:"WP-01", name:"Brandishing Weapon", level:"F", type:"Arrest", elements:["Threat display"]},
+{code:"WP-02", name:"Illegal Firearm Possession", level:"F", type:"Arrest", elements:["Prohibited weapon"]},
 {code:"WP-03", name:"Discharge of Firearm in City Limits", level:"F", type:"Arrest", elements:["Unlawful discharge"]},
-{code:"WP-04", name:"Possession of Weapon by Prohibited Person", level:"F", type:"Arrest", elements:["Restricted individual","Weapon possession"]},
-{code:"WP-05", name:"Unlawful Weapon Modification", level:"F", type:"Arrest", elements:["Illegal weapon alteration"]},
+{code:"WP-04", name:"Possession of Automatic Weapon", level:"F", type:"Arrest", elements:["Illegal firearm"]},
+{code:"WP-05", name:"Possession of Explosives", level:"F", type:"Arrest", elements:["Explosive device"]},
+{code:"WP-06", name:"Weapon Trafficking", level:"F", type:"Arrest", elements:["Distribution"]},
+{code:"WP-07", name:"Possession by Prohibited Person", level:"F", type:"Arrest", elements:["Restricted individual"]},
+{code:"WP-08", name:"Unlawful Weapon Modification", level:"F", type:"Arrest", elements:["Illegal mod"]},
+{code:"WP-09", name:"Concealed Weapon Violation", level:"M", type:"Arrest", elements:["No permit"]},
+{code:"WP-10", name:"Armed Robbery Enhancement", level:"F", type:"Arrest", elements:["Weapon used"]},
 
-/* ───────── PROPERTY CRIMES ───────── */
-{code:"PR-01", name:"Theft", level:"M", type:"Arrest", elements:["Taking property without consent"]},
-{code:"PR-02", name:"Burglary", level:"F", type:"Arrest", elements:["Unlawful entry","Intent to commit crime"]},
-{code:"PR-03", name:"Robbery", level:"F", type:"Arrest", elements:["Theft with force or threat"]},
+/* ───── PROPERTY & PERSONS (14) ───── */
+{code:"PR-01", name:"Theft", level:"M", type:"Arrest", elements:["Taking property"]},
+{code:"PR-02", name:"Burglary", level:"F", type:"Arrest", elements:["Unlawful entry"]},
+{code:"PR-03", name:"Robbery", level:"F", type:"Arrest", elements:["Force or threat"]},
 {code:"PR-04", name:"Vandalism", level:"M", type:"Arrest", elements:["Property damage"]},
-{code:"PR-05", name:"Trespassing", level:"M", type:"Arrest", elements:["Unlawful entry or remaining"]},
-{code:"PR-06", name:"Arson", level:"F", type:"Arrest", elements:["Intentional fire setting"]},
-
-/* ───────── CRIMES AGAINST PERSONS ───────── */
-{code:"PS-01", name:"Assault", level:"M", type:"Arrest", elements:["Threat of imminent harm"]},
-{code:"PS-02", name:"Battery", level:"M", type:"Arrest", elements:["Unlawful physical contact"]},
-{code:"PS-03", name:"Aggravated Assault", level:"F", type:"Arrest", elements:["Serious bodily injury","Weapon involved"]},
-{code:"PS-04", name:"Domestic Violence", level:"F", type:"Arrest", elements:["Violence against household member"]},
+{code:"PR-05", name:"Trespassing", level:"M", type:"Arrest", elements:["Unauthorized entry"]},
+{code:"PR-06", name:"Arson", level:"F", type:"Arrest", elements:["Intentional fire"]},
+{code:"PS-01", name:"Assault", level:"M", type:"Arrest", elements:["Threat of harm"]},
+{code:"PS-02", name:"Battery", level:"M", type:"Arrest", elements:["Physical contact"]},
+{code:"PS-03", name:"Aggravated Assault", level:"F", type:"Arrest", elements:["Serious injury"]},
+{code:"PS-04", name:"Domestic Violence", level:"F", type:"Arrest", elements:["Household violence"]},
 {code:"PS-05", name:"Kidnapping", level:"F", type:"Arrest", elements:["Unlawful restraint"]},
-{code:"PS-06", name:"Menacing", level:"M", type:"Arrest", elements:["Threatening behavior causing fear"]},
+{code:"PS-06", name:"Menacing", level:"M", type:"Arrest", elements:["Fear induced"]},
+{code:"PS-07", name:"Criminal Threats", level:"F", type:"Arrest", elements:["Threatening death"]},
+{code:"PS-08", name:"Sexual Assault", level:"F", type:"Arrest", elements:["Non-consensual act"]},
 
-/* ───────── JUSTICE / ADMIN ───────── */
+/* ───── JUSTICE / ADMIN (10) ───── */
 {code:"JU-01", name:"Resisting Arrest", level:"M", type:"Arrest", elements:["Physical resistance"]},
-{code:"JU-02", name:"Obstruction of Justice", level:"F", type:"Arrest", elements:["Interfering with law enforcement"]},
-{code:"JU-03", name:"Providing False Identification", level:"M", type:"Arrest", elements:["False name or documents"]},
-{code:"JU-04", name:"Failure to Appear", level:"F", type:"Arrest", elements:["Did not appear as ordered"]},
-{code:"JU-05", name:"Witness Intimidation", level:"F", type:"Arrest", elements:["Threatening a witness"]},
+{code:"JU-02", name:"Obstruction of Justice", level:"F", type:"Arrest", elements:["Interference"]},
+{code:"JU-03", name:"Providing False Identification", level:"M", type:"Arrest", elements:["False identity"]},
+{code:"JU-04", name:"Failure to Appear", level:"F", type:"Arrest", elements:["Court no-show"]},
+{code:"JU-05", name:"Witness Intimidation", level:"F", type:"Arrest", elements:["Threats"]},
+{code:"JU-06", name:"Escape from Custody", level:"F", type:"Arrest", elements:["Flee custody"]},
+{code:"JU-07", name:"Tampering with Evidence", level:"F", type:"Arrest", elements:["Destroy evidence"]},
+{code:"JU-08", name:"False Report to Police", level:"F", type:"Arrest", elements:["Knowingly false info"]},
+{code:"JU-09", name:"Impersonating Law Enforcement", level:"F", type:"Arrest", elements:["Pretending officer"]},
+{code:"JU-10", name:"Contempt of Court", level:"M", type:"Arrest", elements:["Disobey court"]},
+
 ];
+
 
 
 
