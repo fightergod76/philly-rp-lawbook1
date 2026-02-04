@@ -2,70 +2,58 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Philadelphia RP CAD – Law Database</title>
+<title>Philly RP v3 CAD</title>
 
 <style>
 body {
   margin: 0;
   font-family: "Segoe UI", Arial, sans-serif;
-  background: #eef1f5;
-  color: #1f2937;
+  background: #f3f4f6;
+  color: #111827;
 }
 
-/* TOP BAR */
-.topbar {
-  height: 52px;
-  background: #2b4c7e;
+/* HEADER */
+.header {
+  height: 56px;
+  background: #1f3a5f;
+  color: white;
   display: flex;
   align-items: center;
-  padding: 0 14px;
-  gap: 10px;
-  color: white;
-}
-
-.topbar button {
-  background: #3b6fb6;
-  border: none;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
+  padding: 0 20px;
+  font-size: 18px;
+  font-weight: 600;
 }
 
 /* LAYOUT */
 .container {
   display: flex;
-  height: calc(100vh - 52px);
+  height: calc(100vh - 56px);
 }
 
 /* SIDEBAR */
 .sidebar {
-  width: 220px;
-  background: #f4f6f9;
-  border-right: 1px solid #d0d7e2;
-  padding: 10px;
+  width: 240px;
+  background: #e5e7eb;
+  border-right: 1px solid #d1d5db;
+  padding: 12px;
 }
 
-.sidebar div {
-  padding: 10px;
+.sidebar h4 {
+  margin-bottom: 8px;
+}
+
+.sidebar input {
+  width: 100%;
+  padding: 8px;
   border-radius: 4px;
-  cursor: pointer;
-  margin-bottom: 4px;
-}
-
-.sidebar div:hover {
-  background: #dde6f5;
-}
-
-.sidebar .active {
-  background: #c8dbf8;
-  font-weight: bold;
+  border: 1px solid #9ca3af;
 }
 
 /* MAIN */
 .main {
   flex: 1;
   padding: 16px;
+  overflow-y: auto;
 }
 
 /* TABLE */
@@ -78,45 +66,41 @@ table {
 th, td {
   padding: 10px;
   border-bottom: 1px solid #e5e7eb;
-  text-align: left;
 }
 
 th {
-  background: #f1f5f9;
+  background: #f9fafb;
+}
+
+tr {
+  transition: background 0.15s ease;
 }
 
 tr:hover {
-  background: #f9fafb;
+  background: #eef2ff;
   cursor: pointer;
 }
 
 /* BADGES */
 .badge {
   padding: 4px 8px;
-  border-radius: 12px;
+  border-radius: 999px;
   font-size: 12px;
   font-weight: bold;
 }
 
-.arrest {
-  background: #d1fae5;
-  color: #065f46;
-}
-
-.citation {
-  background: #fef3c7;
-  color: #92400e;
-}
+.arrest { background:#dcfce7; color:#065f46; }
+.cite { background:#fef3c7; color:#92400e; }
 
 /* DETAILS PANEL */
 .details {
-  margin-top: 14px;
+  margin-top: 16px;
   background: white;
   border: 1px solid #d1d5db;
   padding: 14px;
   opacity: 0;
-  transform: translateY(-6px);
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transform: translateY(-8px);
+  transition: all 0.25s ease;
 }
 
 .details.show {
@@ -126,111 +110,91 @@ tr:hover {
 </style>
 
 <script>
-function showDetails(title, level, arrestable, elements) {
-  const panel = document.getElementById("details");
+const laws = [
+  {code:"DC-01", name:"Disorderly Conduct", level:"M", type:"Arrest", elements:["Disruptive public behavior","Causes alarm or interference"]},
+  {code:"DC-02", name:"Public Disturbance", level:"M", type:"Arrest", elements:["Loud or aggressive behavior","Refusal to comply"]},
+  {code:"INT-01", name:"Public Intoxication", level:"M", type:"Arrest", elements:["Impaired in public","Danger to self or others"]},
+  {code:"INT-02", name:"DUI", level:"F", type:"Arrest", elements:["Operating vehicle","Impaired by alcohol or drugs"]},
+  {code:"INT-03", name:"Possession of Controlled Substance", level:"F", type:"Arrest", elements:["Knowingly possessing illegal substances"]},
+  {code:"TR-01", name:"Speeding", level:"I", type:"Citation", elements:["Exceeding posted speed limit"]},
+  {code:"TR-02", name:"Reckless Driving", level:"M", type:"Arrest", elements:["Willful disregard for safety"]},
+  {code:"TR-03", name:"Evading Law Enforcement", level:"F", type:"Arrest", elements:["Failure to stop when signaled"]},
+  {code:"WP-01", name:"Brandishing a Weapon", level:"F", type:"Arrest", elements:["Weapon displayed in threatening manner"]},
+  {code:"WP-02", name:"Illegal Firearm Possession", level:"F", type:"Arrest", elements:["Possession of prohibited weapon"]},
+  {code:"PR-01", name:"Theft", level:"M", type:"Arrest", elements:["Taking property without consent"]},
+  {code:"PR-02", name:"Burglary", level:"F", type:"Arrest", elements:["Unlawful entry","Intent to commit crime"]},
+  {code:"PR-03", name:"Vandalism", level:"M", type:"Arrest", elements:["Property damage"]},
+  {code:"PS-01", name:"Assault", level:"M", type:"Arrest", elements:["Threat of imminent harm"]},
+  {code:"PS-02", name:"Battery", level:"M", type:"Arrest", elements:["Unlawful physical contact"]},
+  {code:"PS-03", name:"Domestic Violence", level:"F", type:"Arrest", elements:["Violence against household member"]},
+  {code:"JU-01", name:"Resisting Arrest", level:"M", type:"Arrest", elements:["Physical resistance"]},
+  {code:"JU-02", name:"Obstruction of Justice", level:"F", type:"Arrest", elements:["Interfering with law enforcement"]},
+];
 
-  // reset animation
-  panel.classList.remove("show");
-  void panel.offsetWidth; // force reflow
-
-  panel.innerHTML = `
-    <h3>${title}</h3>
-    <p><b>Level:</b> ${level}</p>
-    <p><b>Arrestable:</b> ${arrestable}</p>
-    <ul>${elements.map(e => `<li>${e}</li>`).join("")}</ul>
-  `;
-
-  panel.classList.add("show");
+function render(filter="") {
+  const tbody = document.getElementById("tbody");
+  tbody.innerHTML = "";
+  laws.filter(l =>
+    l.name.toLowerCase().includes(filter) ||
+    l.code.toLowerCase().includes(filter)
+  ).forEach(l => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${l.code}</td>
+      <td>${l.name}</td>
+      <td>${l.level}</td>
+      <td><span class="badge ${l.type==="Arrest"?"arrest":"cite"}">${l.type}</span></td>
+    `;
+    row.onclick = () => showDetails(l);
+    tbody.appendChild(row);
+  });
 }
+
+function showDetails(law) {
+  const d = document.getElementById("details");
+  d.classList.remove("show");
+  void d.offsetWidth;
+  d.innerHTML = `
+    <h3>${law.name} (${law.code})</h3>
+    <p><b>Level:</b> ${law.level}</p>
+    <p><b>Type:</b> ${law.type}</p>
+    <ul>${law.elements.map(e=>`<li>${e}</li>`).join("")}</ul>
+  `;
+  d.classList.add("show");
+}
+
+window.onload = () => render();
 </script>
 </head>
 
 <body>
 
-<div class="topbar">
-  <button>CAD</button>
-  <button>Search</button>
-  <button><b>Laws</b></button>
-</div>
+<div class="header">Philly RP v3 CAD — Law Database</div>
 
 <div class="container">
+  <div class="sidebar">
+    <h4>Search Laws</h4>
+    <input type="text" placeholder="Search by name or code"
+      oninput="render(this.value.toLowerCase())">
+  </div>
 
-<!-- SIDEBAR -->
-<div class="sidebar">
-  <div class="active">Disturbance</div>
-  <div>Intoxication</div>
-  <div>Traffic</div>
-  <div>Weapons</div>
-  <div>Property</div>
-  <div>Persons</div>
-</div>
+  <div class="main">
+    <table>
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Charge</th>
+          <th>Lvl</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
 
-<!-- MAIN -->
-<div class="main">
-
-<table>
-<tr>
-  <th>Code</th>
-  <th>Law</th>
-  <th>Level</th>
-  <th>Type</th>
-</tr>
-
-<tr onclick="showDetails(
-  'Disorderly Conduct',
-  'Misdemeanor',
-  'Yes',
-  ['Disruptive public behavior','Causes alarm or interference']
-)">
-  <td>DC-01</td>
-  <td>Disorderly Conduct</td>
-  <td>M</td>
-  <td><span class="badge arrest">Arrest</span></td>
-</tr>
-
-<tr onclick="showDetails(
-  'Public Intoxication',
-  'Misdemeanor',
-  'Yes',
-  ['Impaired in public','Danger to self or others']
-)">
-  <td>INT-02</td>
-  <td>Public Intoxication</td>
-  <td>M</td>
-  <td><span class="badge arrest">Arrest</span></td>
-</tr>
-
-<tr onclick="showDetails(
-  'Reckless Driving',
-  'Misdemeanor',
-  'Yes',
-  ['Willful disregard for safety']
-)">
-  <td>TR-04</td>
-  <td>Reckless Driving</td>
-  <td>M</td>
-  <td><span class="badge arrest">Arrest</span></td>
-</tr>
-
-<tr onclick="showDetails(
-  'Speeding',
-  'Infraction',
-  'No',
-  ['Exceeding posted limit']
-)">
-  <td>TR-01</td>
-  <td>Speeding</td>
-  <td>I</td>
-  <td><span class="badge citation">Citation</span></td>
-</tr>
-
-</table>
-
-<div id="details" class="details">
-  <i>Select a law to view details.</i>
-</div>
-
-</div>
+    <div id="details" class="details">
+      <i>Select a law to view details.</i>
+    </div>
+  </div>
 </div>
 
 </body>
