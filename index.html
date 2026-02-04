@@ -2,315 +2,178 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Philadelphia RP Law Book</title>
+<title>Philadelphia RP CAD – Laws</title>
 
 <style>
-:root {
-  --bg: #0b0e14;
-  --panel: #121826;
-  --border: #1f2a44;
-  --accent: #4da6ff;
-  --text: #e6e9ef;
-  --muted: #9aa4bf;
-}
-
-* {
-  box-sizing: border-box;
-}
-
 body {
   margin: 0;
-  padding: 30px;
-  font-family: "Segoe UI", Roboto, Arial, sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #0c0f14;
+  color: #e6e9ef;
 }
 
-h1 {
-  text-align: center;
+/* TOP BAR */
+.topbar {
+  height: 52px;
+  background: #1b2a44;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  gap: 10px;
+  border-bottom: 1px solid #263a5e;
+}
+
+.topbar button {
+  background: #233a63;
+  border: 1px solid #2f4f86;
+  color: #e6e9ef;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.topbar button:hover {
+  background: #2d4f8f;
+}
+
+/* LAYOUT */
+.container {
+  display: flex;
+  height: calc(100vh - 52px);
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 240px;
+  background: #0f1625;
+  border-right: 1px solid #263a5e;
+  padding: 10px;
+}
+
+.sidebar h3 {
+  font-size: 14px;
+  color: #9aa4bf;
+  margin-bottom: 8px;
+}
+
+.category {
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
   margin-bottom: 6px;
 }
 
-.subtitle {
-  text-align: center;
-  color: var(--muted);
-  margin-bottom: 30px;
+.category:hover {
+  background: #1b2a44;
 }
 
-/* CATEGORY ACCORDION */
-.category {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  margin-bottom: 16px;
-  overflow: hidden;
-  transition: all 0.3s ease;
+.category.active {
+  background: #2d4f8f;
 }
 
-.category summary {
-  list-style: none;
-  cursor: pointer;
-  padding: 18px 20px;
-  font-size: 18px;
-  font-weight: 600;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.category summary:hover {
-  background: rgba(255,255,255,0.03);
-}
-
-.category summary::marker {
-  display: none;
-}
-
-.chevron {
-  transition: transform 0.3s ease;
-}
-
-.category[open] .chevron {
-  transform: rotate(90deg);
-}
-
-/* LAW ITEMS */
-.law {
-  margin: 0 20px 16px 20px;
-  padding: 14px 16px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: #0f1424;
-  animation: fadeIn 0.35s ease;
+/* MAIN PANEL */
+.main {
+  flex: 1;
+  padding: 20px;
+  background: #0c0f14;
+  animation: fadeIn 0.25s ease;
 }
 
 .law-title {
-  font-weight: 600;
+  font-size: 20px;
   margin-bottom: 6px;
 }
 
 .tag {
-  display: inline-block;
-  margin-bottom: 6px;
-  color: var(--accent);
-  font-weight: 600;
+  color: #4da6ff;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
 ul {
-  margin: 6px 0 0 18px;
-  padding: 0;
+  margin-left: 20px;
 }
 
-li {
-  margin-bottom: 4px;
-}
-
-/* ANIMATION */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateX(6px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 </style>
+
+<script>
+function showLaw(title, arrestable, elements) {
+  const main = document.getElementById("main");
+  main.innerHTML = `
+    <div class="law-title">${title}</div>
+    <div class="tag">Arrestable: ${arrestable}</div>
+    <ul>
+      ${elements.map(e => `<li>${e}</li>`).join("")}
+    </ul>
+  `;
+}
+
+function setActive(el) {
+  document.querySelectorAll(".category").forEach(c => c.classList.remove("active"));
+  el.classList.add("active");
+}
+</script>
 </head>
 
 <body>
 
-<h1>📘 Philadelphia RP Law Book</h1>
-<div class="subtitle">Imperial CAD–Style • Bonelab Compatible • Click to Expand</div>
+<!-- TOP BAR -->
+<div class="topbar">
+  <button>Log Out</button>
+  <button>CAD</button>
+  <button>Search</button>
+  <button>Returns</button>
+  <button><b>Laws</b></button>
+</div>
 
-<!-- DISTURBANCE -->
-<details class="category">
-  <summary>
-    🚨 Disturbance & Public Order
-    <span class="chevron">▶</span>
-  </summary>
+<div class="container">
 
-  <div class="law">
-    <div class="law-title">Disorderly Conduct</div>
-    <div class="tag">Arrestable</div>
-    <ul>
-      <li>Violent, threatening, or disruptive behavior</li>
-      <li>Causes public alarm or interferes with others</li>
-    </ul>
-  </div>
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <h3>LAW CATEGORIES</h3>
 
-  <div class="law">
-    <div class="law-title">Public Disturbance</div>
-    <div class="tag">Arrestable</div>
-    <ul>
-      <li>Loud, abusive, or aggressive conduct</li>
-      <li>Refusal to comply with lawful orders</li>
-    </ul>
-  </div>
+  <div class="category" onclick="setActive(this); showLaw(
+    'Disorderly Conduct',
+    'YES',
+    ['Disruptive behavior in public','Causes alarm or interferes with others']
+  )">Disturbance</div>
 
-  <div class="law">
-    <div class="law-title">Unlawful Assembly</div>
-    <div class="tag">Arrestable</div>
-    <ul>
-      <li>Three or more persons</li>
-      <li>Failure to disperse when ordered</li>
-    </ul>
-  </div>
-</details>
+  <div class="category" onclick="setActive(this); showLaw(
+    'Public Intoxication',
+    'YES',
+    ['Impaired in public','Danger to self or others']
+  )">Intoxication</div>
 
-<!-- INTOXICATION -->
-<details class="category">
-  <summary>
-    🍺 Intoxication & Substances
-    <span class="chevron">▶</span>
-  </summary>
+  <div class="category" onclick="setActive(this); showLaw(
+    'Reckless Driving',
+    'YES',
+    ['Willful disregard for safety']
+  )">Traffic</div>
 
-  <div class="law">
-    <div class="law-title">Public Intoxication</div>
-    <div class="tag">Arrestable</div>
-    <ul>
-      <li>Impaired in a public place</li>
-      <li>Poses danger to self or others</li>
-    </ul>
-  </div>
+  <div class="category" onclick="setActive(this); showLaw(
+    'Brandishing a Weapon',
+    'YES',
+    ['Weapon displayed in threatening manner']
+  )">Weapons</div>
 
-  <div class="law">
-    <div class="law-title">Driving Under the Influence (DUI)</div>
-    <div class="tag">Arrestable</div>
-    <ul>
-      <li>Operating a vehicle while impaired</li>
-    </ul>
-  </div>
+  <div class="category" onclick="setActive(this); showLaw(
+    'Theft',
+    'YES',
+    ['Taking property without consent']
+  )">Property</div>
 
-  <div class="law">
-    <div class="law-title">Possession of Controlled Substance</div>
-    <div class="tag">Arrestable</div>
-    <ul>
-      <li>Knowingly possessing illegal substances</li>
-    </ul>
-  </div>
-</details>
+</div>
 
-<!-- TRAFFIC -->
-<details class="category">
-  <summary>
-    🚗 Traffic & Vehicles
-    <span class="chevron">▶</span>
-  </summary>
+<!-- MAIN -->
+<div class="main" id="main">
+  <div class="law-title">Select a Law</div>
+  <p class="tag">Choose a category from the left.</p>
+</div>
 
-  <div class="law">
-    <div class="law-title">Reckless Driving</div>
-    <div class="tag">Arrestable</div>
-    <ul>
-      <li>Willful disregard for safety</li>
-    </ul>
-  </div>
-
-  <div class="law">
-    <div class="law-title">Evading Law Enforcement</div>
-    <div class="tag">Arrestable</div>
-    <ul>
-      <li>Failure to stop when signaled</li>
-    </ul>
-  </div>
-
-  <div class="law">
-    <div class="law-title">Hit and Run</div>
-    <div class="tag">Arrestable</div>
-    <ul>
-      <li>Leaving scene of a collision</li>
-    </ul>
-  </div>
-</details>
-
-<!-- WEAPONS -->
-<details class="category">
-  <summary>
-    🔫 Weapons Offenses
-    <span class="chevron">▶</span>
-  </summary>
-
-  <div class="law">
-    <div class="law-title">Brandishing a Weapon</div>
-    <div class="tag">Arrestable</div>
-    <ul>
-      <li>Displaying weapon in a threatening manner</li>
-    </ul>
-  </div>
-
-  <div class="law">
-    <div class="law-title">Discharge of Firearm in City Limits</div>
-    <div class="tag">Arrestable</div>
-    <ul>
-      <li>Unlawful discharge of a firearm</li>
-    </ul>
-  </div>
-</details>
-
-<!-- PROPERTY -->
-<details class="category">
-  <summary>
-    🏠 Property Crimes
-    <span class="chevron">▶</span>
-  </summary>
-
-  <div class="law">
-    <div class="law-title">Theft</div>
-    <div class="tag">Arrestable</div>
-    <ul>
-      <li>Taking property without consent</li>
-    </ul>
-  </div>
-
-  <div class="law">
-    <div class="law-title">Burglary</div>
-    <div class="tag">Arrestable</div>
-    <ul>
-      <li>Unlawful entry with intent to commit crime</li>
-    </ul>
-  </div>
-
-  <div class="law">
-    <div class="law-title">Vandalism</div>
-    <div class="tag">Arrestable</div>
-    <ul>
-      <li>Damaging property without permission</li>
-    </ul>
-  </div>
-</details>
-
-<!-- PERSON CRIMES -->
-<details class="category">
-  <summary>
-    🧍 Crimes Against Persons
-    <span class="chevron">▶</span>
-  </summary>
-
-  <div class="law">
-    <div class="law-title">Assault</div>
-    <div class="tag">Arrestable</div>
-    <ul>
-      <li>Causing fear of imminent harm</li>
-    </ul>
-  </div>
-
-  <div class="law">
-    <div class="law-title">Battery</div>
-    <div class="tag">Arrestable</div>
-    <ul>
-      <li>Unlawful physical contact</li>
-    </ul>
-  </div>
-
-  <div class="law">
-    <div class="law-title">Domestic Violence</div>
-    <div class="tag">Arrestable</div>
-    <ul>
-      <li>Violence against household member</li>
-    </ul>
-  </div>
-</details>
-
+</div>
 </body>
 </html>
