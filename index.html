@@ -17,86 +17,85 @@ body{
   position:fixed;
   inset:0;
   display:flex;
+  flex-direction:column;
   justify-content:center;
   align-items:center;
-  flex-direction:column;
   background:#0f172a;
 }
 
 input{
-  padding:10px;
-  border-radius:6px;
+  padding:8px;
+  border-radius:4px;
   border:none;
-  margin-top:10px;
+  margin-top:8px;
 }
 
 button{
-  padding:8px 15px;
+  padding:6px 14px;
   border:none;
-  border-radius:6px;
+  border-radius:4px;
   background:#2563eb;
   color:white;
   cursor:pointer;
-  margin-top:10px;
+  margin-top:8px;
 }
 
-/* MAIN */
+/* MAIN GREETING */
 #main{
   display:none;
-  height:100vh;
   text-align:center;
-  padding-top:100px;
+  padding-top:80px;
 }
 
 .columns{
   display:flex;
   justify-content:center;
-  gap:50px;
-  margin-top:50px;
+  gap:30px;
+  margin-top:40px;
 }
 
 .column{
-  width:250px;
-  padding:40px;
+  width:180px;
+  padding:20px;
   background:#1e293b;
-  border-radius:10px;
+  border-radius:6px;
   cursor:pointer;
-  transition:0.3s;
+  transition:0.2s;
 }
 
 .column:hover{
   background:#334155;
-  transform:scale(1.05);
 }
 
-/* SECTION VIEW */
-#sectionView{
+/* SECTION */
+#section{
   display:none;
-  padding:40px;
+  padding:20px 60px;
 }
 
-.closeBtn{
-  position:absolute;
-  top:20px;
-  right:30px;
-  font-size:20px;
+.back{
   cursor:pointer;
+  margin-bottom:20px;
+  display:inline-block;
+  color:#3b82f6;
 }
 
 .item{
-  background:#1e293b;
-  padding:10px;
-  margin-bottom:5px;
-  border-radius:6px;
+  padding:8px;
+  border-bottom:1px solid #1e293b;
   cursor:pointer;
-  text-align:left;
+}
+
+.item:hover{
+  background:#1e293b;
 }
 
 .detail{
   background:#111827;
-  padding:10px;
+  padding:8px 12px;
   display:none;
-  margin-bottom:10px;
+  font-size:14px;
+  border-left:3px solid #3b82f6;
 }
 </style>
 
@@ -104,7 +103,6 @@ button{
 
 const password="FEBPHILLYRPV3POLICE";
 
-/* LOGIN */
 function login(){
   if(document.getElementById("pass").value===password){
     document.getElementById("login").style.display="none";
@@ -113,7 +111,6 @@ function login(){
   } else alert("Invalid Code");
 }
 
-/* TYPEWRITER */
 function typeText(){
   const text="Click one of the columns to get started!";
   const el=document.getElementById("typed");
@@ -123,44 +120,26 @@ function typeText(){
     if(i<text.length){
       el.innerHTML+=text.charAt(i);
       i++;
-      setTimeout(type,40);
+      setTimeout(type,30);
     }
   }
   type();
 }
 
-/* OPEN SECTION */
 function openSection(type){
   document.getElementById("main").style.display="none";
-  document.getElementById("sectionView").style.display="block";
-  document.getElementById("sectionContent").innerHTML="";
-  
-  if(type==="codes") buildList(tenCodes);
-  if(type==="laws") buildList(laws);
+  document.getElementById("section").style.display="block";
+  const container=document.getElementById("content");
+  container.innerHTML="";
+
+  if(type==="laws") buildLaws();
+  if(type==="codes") buildCodes();
 }
 
-function closeSection(){
-  document.getElementById("sectionView").style.display="none";
+function back(){
+  document.getElementById("section").style.display="none";
   document.getElementById("main").style.display="block";
   typeText();
-}
-
-/* EXPAND LIST */
-function buildList(data){
-  const container=document.getElementById("sectionContent");
-  for(let key in data){
-    const item=document.createElement("div");
-    item.className="item";
-    item.innerText=key;
-    item.onclick=()=>toggle(item);
-    
-    const detail=document.createElement("div");
-    detail.className="detail";
-    detail.innerText=data[key];
-    
-    container.appendChild(item);
-    container.appendChild(detail);
-  }
 }
 
 function toggle(el){
@@ -168,8 +147,51 @@ function toggle(el){
   next.style.display= next.style.display==="block"?"none":"block";
 }
 
+/* FULL LAW DATA (YOURS) */
+const laws = [
+{code:"DC-01", name:"Disorderly Conduct", level:"M", type:"Arrest", elements:["Disruptive public behavior"]},
+{code:"DC-02", name:"Public Disturbance", level:"M", type:"Arrest", elements:["Loud or aggressive conduct"]},
+{code:"DC-03", name:"Unlawful Assembly", level:"M", type:"Arrest", elements:["Failure to disperse"]},
+{code:"DC-04", name:"Failure to Obey Lawful Order", level:"M", type:"Arrest", elements:["Refusal of lawful command"]},
+{code:"DC-05", name:"Harassment", level:"M", type:"Arrest", elements:["Repeated unwanted actions"]},
+{code:"DC-06", name:"Loitering", level:"I", type:"Citation", elements:["Remaining without purpose"]},
+{code:"DC-07", name:"Panhandling Aggressively", level:"M", type:"Arrest", elements:["Threatening solicitation"]},
+{code:"DC-08", name:"False Emergency Report", level:"F", type:"Arrest", elements:["Knowingly false report"]},
+{code:"DC-09", name:"Public Nuisance", level:"M", type:"Arrest", elements:["Interferes with public safety"]},
+{code:"DC-10", name:"Riot Participation", level:"F", type:"Arrest", elements:["Violent group conduct"]},
+{code:"INT-01", name:"Public Intoxication", level:"M", type:"Arrest", elements:["Impaired in public"]},
+{code:"INT-02", name:"DUI", level:"F", type:"Arrest", elements:["Operating vehicle while impaired"]},
+{code:"INT-03", name:"Drug Possession (Low)", level:"M", type:"Arrest", elements:["Small quantity"]},
+{code:"INT-04", name:"Drug Possession (High)", level:"F", type:"Arrest", elements:["Large quantity"]},
+{code:"INT-05", name:"Possession w/ Intent to Distribute", level:"F", type:"Arrest", elements:["Packaging or scales"]},
+{code:"INT-06", name:"Drug Paraphernalia", level:"M", type:"Arrest", elements:["Use equipment"]},
+{code:"INT-07", name:"Controlled Substance Manufacturing", level:"F", type:"Arrest", elements:["Illegal production"]},
+{code:"INT-08", name:"Selling Controlled Substances", level:"F", type:"Arrest", elements:["Distribution"]},
+{code:"INT-09", name:"Under the Influence (Non-Vehicle)", level:"M", type:"Arrest", elements:["Impaired behavior"]},
+{code:"INT-10", name:"Open Container", level:"I", type:"Citation", elements:["Alcohol in public"]},
+{code:"INT-11", name:"Minor in Possession", level:"M", type:"Arrest", elements:["Underage alcohol"]},
+{code:"INT-12", name:"Drug House Operation", level:"F", type:"Arrest", elements:["Location for narcotics"]},
+];
+
+function buildLaws(){
+  const container=document.getElementById("content");
+  laws.forEach(l=>{
+    const item=document.createElement("div");
+    item.className="item";
+    item.innerText=`${l.code} — ${l.name} (${l.level})`;
+    item.onclick=()=>toggle(item);
+
+    const detail=document.createElement("div");
+    detail.className="detail";
+    detail.innerHTML=`<b>Type:</b> ${l.type}<br>${l.elements.join("<br>")}`;
+
+    container.appendChild(item);
+    container.appendChild(detail);
+  });
+}
+
 /* FULL 10 CODE LIST */
-const tenCodes={
+const tenCodes = {
 "10-0":"Use caution",
 "10-1":"Poor signal",
 "10-2":"Clear signal",
@@ -236,14 +258,22 @@ const tenCodes={
 "10-2000":"Police required immediately"
 };
 
-/* SAMPLE LAW LIST (you can expand) */
-const laws={
-"F-101 Assault":"Intentional harm toward another individual.",
-"F-102 Armed Robbery":"Theft involving weapon.",
-"M-201 Disorderly Conduct":"Public disruptive behavior.",
-"I-301 Speeding":"Exceeding speed limit."
-};
+function buildCodes(){
+  const container=document.getElementById("content");
+  for(let key in tenCodes){
+    const item=document.createElement("div");
+    item.className="item";
+    item.innerText=key;
+    item.onclick=()=>toggle(item);
 
+    const detail=document.createElement("div");
+    detail.className="detail";
+    detail.innerText=tenCodes[key];
+
+    container.appendChild(item);
+    container.appendChild(detail);
+  }
+}
 </script>
 </head>
 
@@ -251,7 +281,6 @@ const laws={
 
 <div id="login">
   <h2>Philadelphia Police Department</h2>
-  <p>Hello, Officer.</p>
   <input id="pass" type="password">
   <button onclick="login()">Enter</button>
 </div>
@@ -259,16 +288,15 @@ const laws={
 <div id="main">
   <h1>Hello, Officer!</h1>
   <p id="typed"></p>
-  
   <div class="columns">
     <div class="column" onclick="openSection('laws')">Laws</div>
     <div class="column" onclick="openSection('codes')">10 Codes</div>
   </div>
 </div>
 
-<div id="sectionView">
-  <div class="closeBtn" onclick="closeSection()">✖</div>
-  <div id="sectionContent"></div>
+<div id="section">
+  <div class="back" onclick="back()">← Back</div>
+  <div id="content"></div>
 </div>
 
 </body>
