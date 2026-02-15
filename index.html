@@ -1,188 +1,274 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <title>Philly RP v3 CAD</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: "Segoe UI", Arial, sans-serif;
-  background: #0f172a;
-  color: white;
+body{
+  margin:0;
+  font-family:Segoe UI;
+  background:#0f172a;
+  color:white;
 }
 
-.header {
-  height: 56px;
-  background: #1f3a5f;
-  display: flex;
-  align-items: center;
-  padding: 0 20px;
-  font-size: 18px;
-  font-weight: 600;
+/* LOGIN */
+#login{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  background:#0f172a;
 }
 
-.container {
-  display: flex;
-  height: calc(100vh - 56px);
+input{
+  padding:10px;
+  border-radius:6px;
+  border:none;
+  margin-top:10px;
 }
 
-.sidebar {
-  width: 260px;
-  background: #1e293b;
-  padding: 14px;
+button{
+  padding:8px 15px;
+  border:none;
+  border-radius:6px;
+  background:#2563eb;
+  color:white;
+  cursor:pointer;
+  margin-top:10px;
 }
 
-.sidebar input {
-  width: 100%;
-  padding: 8px;
-  border-radius: 4px;
-  border: none;
-  font-size: 14px;
+/* MAIN */
+#main{
+  display:none;
+  height:100vh;
+  text-align:center;
+  padding-top:100px;
 }
 
-.main {
-  flex: 1;
-  padding: 16px;
-  overflow-y: auto;
+.columns{
+  display:flex;
+  justify-content:center;
+  gap:50px;
+  margin-top:50px;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #1e293b;
+.column{
+  width:250px;
+  padding:40px;
+  background:#1e293b;
+  border-radius:10px;
+  cursor:pointer;
+  transition:0.3s;
 }
 
-th, td {
-  padding: 10px;
-  border-bottom: 1px solid #334155;
+.column:hover{
+  background:#334155;
+  transform:scale(1.05);
 }
 
-th {
-  background: #111827;
-  text-align: left;
+/* SECTION VIEW */
+#sectionView{
+  display:none;
+  padding:40px;
 }
 
-tr:hover {
-  background: #1e40af44;
-  cursor: pointer;
+.closeBtn{
+  position:absolute;
+  top:20px;
+  right:30px;
+  font-size:20px;
+  cursor:pointer;
 }
 
-.detail-row td {
-  background: #0b1220;
-  padding: 15px;
+.item{
+  background:#1e293b;
+  padding:10px;
+  margin-bottom:5px;
+  border-radius:6px;
+  cursor:pointer;
+  text-align:left;
 }
 
-.level-F { color: #ef4444; font-weight: bold; }
-.level-M { color: #f59e0b; font-weight: bold; }
-.level-I { color: #10b981; font-weight: bold; }
+.detail{
+  background:#111827;
+  padding:10px;
+  display:none;
+  margin-bottom:10px;
+}
 </style>
 
 <script>
 
-const database = [
+const password="FEBPHILLYRPV3POLICE";
 
-/* 10 CODES */
-{code:"10-0", name:"Use Caution", level:"-", type:"10-Code", description:"Advise units to approach carefully.", fine:"-", jail:"-"},
-{code:"10-4", name:"Acknowledged", level:"-", type:"10-Code", description:"Message received and understood.", fine:"-", jail:"-"},
-{code:"10-11", name:"Traffic Stop", level:"-", type:"10-Code", description:"Unit conducting traffic stop.", fine:"-", jail:"-"},
-{code:"10-20", name:"Location", level:"-", type:"10-Code", description:"Request or provide location.", fine:"-", jail:"-"},
-{code:"10-23", name:"On Scene", level:"-", type:"10-Code", description:"Arrived at scene.", fine:"-", jail:"-"},
-{code:"10-24", name:"Request Backup", level:"-", type:"10-Code", description:"Emergency assistance requested.", fine:"-", jail:"-"},
-{code:"10-31", name:"Crime in Progress", level:"-", type:"10-Code", description:"Active criminal activity.", fine:"-", jail:"-"},
-{code:"10-32", name:"Subject with Firearm", level:"-", type:"10-Code", description:"Armed suspect reported.", fine:"-", jail:"-"},
-{code:"10-80", name:"Pursuit in Progress", level:"-", type:"10-Code", description:"Vehicle pursuit initiated.", fine:"-", jail:"-"},
-{code:"10-99", name:"Officer in Danger", level:"-", type:"10-Code", description:"Immediate emergency assistance required.", fine:"-", jail:"-"},
-
-/* ORIGINAL LAW STYLE */
-{code:"DC-01", name:"Disorderly Conduct", level:"M", type:"Arrest", description:"Disruptive public behavior.", fine:"$500", jail:"30 Months"},
-{code:"DC-02", name:"Public Disturbance", level:"M", type:"Arrest", description:"Creating public alarm or disruption.", fine:"$750", jail:"45 Months"},
-{code:"INT-02", name:"DUI", level:"F", type:"Arrest", description:"Operating vehicle while impaired.", fine:"$2500", jail:"80 Months"},
-{code:"TR-01", name:"Speeding", level:"I", type:"Citation", description:"Exceeding posted speed limit.", fine:"$300", jail:"-"},
-{code:"TR-03", name:"Evading Law Enforcement", level:"F", type:"Arrest", description:"Failure to stop during lawful traffic stop.", fine:"$4000", jail:"100 Months"},
-{code:"WP-01", name:"Illegal Firearm Possession", level:"F", type:"Arrest", description:"Possessing prohibited firearm.", fine:"$5000", jail:"120 Months"},
-{code:"PR-02", name:"Burglary", level:"F", type:"Arrest", description:"Unlawful entry to commit crime.", fine:"$4000", jail:"100 Months"},
-{code:"JU-01", name:"Resisting Arrest", level:"M", type:"Arrest", description:"Refusing lawful custody.", fine:"$1000", jail:"60 Months"},
-
-/* CUSTOM ADDITIONS */
-{code:"F-150", name:"Aggravated Assault on Officer", level:"F", type:"Arrest", description:"Intentional harm toward law enforcement.", fine:"$7000", jail:"140 Months"},
-{code:"F-160", name:"Armed Carjacking", level:"F", type:"Arrest", description:"Vehicle theft involving weapon.", fine:"$6000", jail:"130 Months"},
-{code:"M-210", name:"Evading on Foot", level:"M", type:"Arrest", description:"Attempt to flee lawful detention.", fine:"$1200", jail:"70 Months"},
-{code:"I-320", name:"Illegal Parking", level:"I", type:"Citation", description:"Vehicle parked unlawfully.", fine:"$150", jail:"-"},
-];
-
-function render(filter=""){
-  const tbody=document.getElementById("tbody");
-  tbody.innerHTML="";
-
-  database.filter(item =>
-    item.name.toLowerCase().includes(filter) ||
-    item.code.toLowerCase().includes(filter)
-  ).forEach(item => {
-
-    const row=document.createElement("tr");
-    row.innerHTML=`
-      <td>${item.code}</td>
-      <td>${item.name}</td>
-      <td class="level-${item.level}">${item.level}</td>
-      <td>${item.type}</td>
-    `;
-
-    row.onclick=()=>toggleDetails(row,item);
-    tbody.appendChild(row);
-  });
+/* LOGIN */
+function login(){
+  if(document.getElementById("pass").value===password){
+    document.getElementById("login").style.display="none";
+    document.getElementById("main").style.display="block";
+    typeText();
+  } else alert("Invalid Code");
 }
 
-function toggleDetails(row,item){
-  const next=row.nextElementSibling;
-
-  if(next && next.classList.contains("detail-row")){
-    next.remove();
-    return;
+/* TYPEWRITER */
+function typeText(){
+  const text="Click one of the columns to get started!";
+  const el=document.getElementById("typed");
+  el.innerHTML="";
+  let i=0;
+  function type(){
+    if(i<text.length){
+      el.innerHTML+=text.charAt(i);
+      i++;
+      setTimeout(type,40);
+    }
   }
-
-  const detail=document.createElement("tr");
-  detail.className="detail-row";
-  detail.innerHTML=`
-    <td colspan="4">
-      <b>Description:</b> ${item.description}<br>
-      <b>Fine:</b> ${item.fine}<br>
-      <b>Jail Time:</b> ${item.jail}
-    </td>
-  `;
-
-  row.after(detail);
+  type();
 }
 
-window.onload=()=>render();
+/* OPEN SECTION */
+function openSection(type){
+  document.getElementById("main").style.display="none";
+  document.getElementById("sectionView").style.display="block";
+  document.getElementById("sectionContent").innerHTML="";
+  
+  if(type==="codes") buildList(tenCodes);
+  if(type==="laws") buildList(laws);
+}
+
+function closeSection(){
+  document.getElementById("sectionView").style.display="none";
+  document.getElementById("main").style.display="block";
+  typeText();
+}
+
+/* EXPAND LIST */
+function buildList(data){
+  const container=document.getElementById("sectionContent");
+  for(let key in data){
+    const item=document.createElement("div");
+    item.className="item";
+    item.innerText=key;
+    item.onclick=()=>toggle(item);
+    
+    const detail=document.createElement("div");
+    detail.className="detail";
+    detail.innerText=data[key];
+    
+    container.appendChild(item);
+    container.appendChild(detail);
+  }
+}
+
+function toggle(el){
+  const next=el.nextElementSibling;
+  next.style.display= next.style.display==="block"?"none":"block";
+}
+
+/* FULL 10 CODE LIST */
+const tenCodes={
+"10-0":"Use caution",
+"10-1":"Poor signal",
+"10-2":"Clear signal",
+"10-3":"Stop transmitting",
+"10-4":"Acknowledged",
+"10-6":"Busy",
+"10-7":"Out of service",
+"10-8":"In service",
+"10-9":"Repeat",
+"10-11":"Traffic stop",
+"10-12":"Standby",
+"10-15":"Prisoner in custody",
+"10-18":"Urgent",
+"10-19":"Return to station",
+"10-20":"Location",
+"10-21":"Phone call",
+"10-22":"Disregard",
+"10-23":"On scene",
+"10-24":"Request backup",
+"10-26":"Detaining suspect",
+"10-27":"License check",
+"10-28":"Registration check",
+"10-29":"Wants/warrants check",
+"10-31":"Crime in progress",
+"10-32":"Subject with firearm",
+"10-33":"Emergency traffic only",
+"10-34":"Disturbance",
+"10-38":"Traffic stop",
+"10-39":"Lights and sirens",
+"10-40":"Silent run",
+"10-41":"Begin shift",
+"10-42":"End shift",
+"10-46":"Motorist assist",
+"10-48":"Traffic control",
+"10-50":"Vehicle accident",
+"10-52":"EMS requested",
+"10-53":"Road blocked",
+"10-55":"Intoxicated driver",
+"10-57":"Hit and run",
+"10-60":"Unit in area",
+"10-62":"Suspicious person",
+"10-66":"Officer welfare check",
+"10-70":"Fire reported",
+"10-71":"Shooting reported",
+"10-76":"En route",
+"10-77":"ETA",
+"10-78":"Request assistance",
+"10-80":"Pursuit in progress",
+"10-84":"Advise ETA",
+"10-89":"Bomb threat",
+"10-90":"Alarm activation",
+"10-92":"Subject in custody",
+"10-94":"Street racing",
+"10-96":"Detain subject",
+"10-97":"Arrived on scene",
+"10-98":"Assignment complete",
+"10-99":"Officer in danger",
+"10-103":"Disturbance",
+"10-107":"Suspicious person",
+"10-108":"Officer down",
+"10-110":"Juvenile disturbance",
+"10-112":"Impersonating officer",
+"10-200":"Narcotics involved",
+"10-2000":"Police required immediately"
+};
+
+/* SAMPLE LAW LIST (you can expand) */
+const laws={
+"F-101 Assault":"Intentional harm toward another individual.",
+"F-102 Armed Robbery":"Theft involving weapon.",
+"M-201 Disorderly Conduct":"Public disruptive behavior.",
+"I-301 Speeding":"Exceeding speed limit."
+};
 
 </script>
 </head>
 
 <body>
 
-<div class="header">Philly RP v3 CAD — Law & 10-Code Database</div>
+<div id="login">
+  <h2>Philadelphia Police Department</h2>
+  <p>Hello, Officer.</p>
+  <input id="pass" type="password">
+  <button onclick="login()">Enter</button>
+</div>
 
-<div class="container">
-  <div class="sidebar">
-    <h4>Search Database</h4>
-    <input type="text" placeholder="Search by code or name"
-      oninput="render(this.value.toLowerCase())">
+<div id="main">
+  <h1>Hello, Officer!</h1>
+  <p id="typed"></p>
+  
+  <div class="columns">
+    <div class="column" onclick="openSection('laws')">Laws</div>
+    <div class="column" onclick="openSection('codes')">10 Codes</div>
   </div>
+</div>
 
-  <div class="main">
-    <table>
-      <thead>
-        <tr>
-          <th>Code</th>
-          <th>Name</th>
-          <th>Lvl</th>
-          <th>Type</th>
-        </tr>
-      </thead>
-      <tbody id="tbody"></tbody>
-    </table>
-  </div>
+<div id="sectionView">
+  <div class="closeBtn" onclick="closeSection()">✖</div>
+  <div id="sectionContent"></div>
 </div>
 
 </body>
