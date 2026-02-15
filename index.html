@@ -1,219 +1,187 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Philly RP v3 CAD</title>
 
 <style>
 body {
-  margin:0;
-  font-family:Segoe UI, Arial;
-  background:#0f172a;
-  color:white;
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #0f172a;
+  color: white;
 }
 
-/* LOGIN */
-#login {
-  position:fixed;
-  inset:0;
-  background:#0f172a;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  z-index:999;
+.header {
+  height: 56px;
+  background: #1f3a5f;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  font-size: 18px;
+  font-weight: 600;
 }
 
-#loginBox {
-  background:#1e293b;
-  padding:30px;
-  border-radius:10px;
-  text-align:center;
-}
-
-.password-wrap {
-  position:relative;
-  margin-top:10px;
-}
-
-.password-wrap input {
-  padding:10px;
-  border-radius:6px;
-  border:none;
-  width:220px;
-}
-
-.eye {
-  position:absolute;
-  right:10px;
-  top:8px;
-  cursor:pointer;
-  transition:0.2s;
-}
-
-.eye:active {
-  transform:scale(1.2);
-  filter:drop-shadow(0 0 6px cyan);
-}
-
-/* LAYOUT */
 .container {
-  display:flex;
-  height:100vh;
+  display: flex;
+  height: calc(100vh - 56px);
 }
 
 .sidebar {
-  width:320px;
-  background:#1e293b;
-  overflow-y:auto;
-  padding:15px;
+  width: 260px;
+  background: #1e293b;
+  padding: 14px;
 }
 
-.section {
-  margin-bottom:20px;
+.sidebar input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: none;
+  font-size: 14px;
 }
 
-.item {
-  padding:8px;
-  background:#334155;
-  margin-bottom:4px;
-  border-radius:5px;
-  cursor:pointer;
-  transition:0.2s;
+.main {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
 }
 
-.item:hover {
-  background:#475569;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #1e293b;
 }
 
-.details {
-  background:#0f172a;
-  padding:8px;
-  border-left:3px solid #3b82f6;
-  margin-bottom:6px;
-  display:none;
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #334155;
 }
+
+th {
+  background: #111827;
+  text-align: left;
+}
+
+tr:hover {
+  background: #1e40af44;
+  cursor: pointer;
+}
+
+.detail-row td {
+  background: #0b1220;
+  padding: 15px;
+}
+
+.level-F { color: #ef4444; font-weight: bold; }
+.level-M { color: #f59e0b; font-weight: bold; }
+.level-I { color: #10b981; font-weight: bold; }
 </style>
 
 <script>
 
-const password="FEBPHILLYRPV3POLICE";
+const database = [
 
-/* LOGIN */
-function checkLogin(){
-  if(document.getElementById("pass").value===password){
-    document.getElementById("login").style.display="none";
-  } else {
-    alert("Invalid Code");
+/* 10 CODES */
+{code:"10-0", name:"Use Caution", level:"-", type:"10-Code", description:"Advise units to approach carefully.", fine:"-", jail:"-"},
+{code:"10-4", name:"Acknowledged", level:"-", type:"10-Code", description:"Message received and understood.", fine:"-", jail:"-"},
+{code:"10-11", name:"Traffic Stop", level:"-", type:"10-Code", description:"Unit conducting traffic stop.", fine:"-", jail:"-"},
+{code:"10-20", name:"Location", level:"-", type:"10-Code", description:"Request or provide location.", fine:"-", jail:"-"},
+{code:"10-23", name:"On Scene", level:"-", type:"10-Code", description:"Arrived at scene.", fine:"-", jail:"-"},
+{code:"10-24", name:"Request Backup", level:"-", type:"10-Code", description:"Emergency assistance requested.", fine:"-", jail:"-"},
+{code:"10-31", name:"Crime in Progress", level:"-", type:"10-Code", description:"Active criminal activity.", fine:"-", jail:"-"},
+{code:"10-32", name:"Subject with Firearm", level:"-", type:"10-Code", description:"Armed suspect reported.", fine:"-", jail:"-"},
+{code:"10-80", name:"Pursuit in Progress", level:"-", type:"10-Code", description:"Vehicle pursuit initiated.", fine:"-", jail:"-"},
+{code:"10-99", name:"Officer in Danger", level:"-", type:"10-Code", description:"Immediate emergency assistance required.", fine:"-", jail:"-"},
+
+/* ORIGINAL LAW STYLE */
+{code:"DC-01", name:"Disorderly Conduct", level:"M", type:"Arrest", description:"Disruptive public behavior.", fine:"$500", jail:"30 Months"},
+{code:"DC-02", name:"Public Disturbance", level:"M", type:"Arrest", description:"Creating public alarm or disruption.", fine:"$750", jail:"45 Months"},
+{code:"INT-02", name:"DUI", level:"F", type:"Arrest", description:"Operating vehicle while impaired.", fine:"$2500", jail:"80 Months"},
+{code:"TR-01", name:"Speeding", level:"I", type:"Citation", description:"Exceeding posted speed limit.", fine:"$300", jail:"-"},
+{code:"TR-03", name:"Evading Law Enforcement", level:"F", type:"Arrest", description:"Failure to stop during lawful traffic stop.", fine:"$4000", jail:"100 Months"},
+{code:"WP-01", name:"Illegal Firearm Possession", level:"F", type:"Arrest", description:"Possessing prohibited firearm.", fine:"$5000", jail:"120 Months"},
+{code:"PR-02", name:"Burglary", level:"F", type:"Arrest", description:"Unlawful entry to commit crime.", fine:"$4000", jail:"100 Months"},
+{code:"JU-01", name:"Resisting Arrest", level:"M", type:"Arrest", description:"Refusing lawful custody.", fine:"$1000", jail:"60 Months"},
+
+/* CUSTOM ADDITIONS */
+{code:"F-150", name:"Aggravated Assault on Officer", level:"F", type:"Arrest", description:"Intentional harm toward law enforcement.", fine:"$7000", jail:"140 Months"},
+{code:"F-160", name:"Armed Carjacking", level:"F", type:"Arrest", description:"Vehicle theft involving weapon.", fine:"$6000", jail:"130 Months"},
+{code:"M-210", name:"Evading on Foot", level:"M", type:"Arrest", description:"Attempt to flee lawful detention.", fine:"$1200", jail:"70 Months"},
+{code:"I-320", name:"Illegal Parking", level:"I", type:"Citation", description:"Vehicle parked unlawfully.", fine:"$150", jail:"-"},
+];
+
+function render(filter=""){
+  const tbody=document.getElementById("tbody");
+  tbody.innerHTML="";
+
+  database.filter(item =>
+    item.name.toLowerCase().includes(filter) ||
+    item.code.toLowerCase().includes(filter)
+  ).forEach(item => {
+
+    const row=document.createElement("tr");
+    row.innerHTML=`
+      <td>${item.code}</td>
+      <td>${item.name}</td>
+      <td class="level-${item.level}">${item.level}</td>
+      <td>${item.type}</td>
+    `;
+
+    row.onclick=()=>toggleDetails(row,item);
+    tbody.appendChild(row);
+  });
+}
+
+function toggleDetails(row,item){
+  const next=row.nextElementSibling;
+
+  if(next && next.classList.contains("detail-row")){
+    next.remove();
+    return;
   }
+
+  const detail=document.createElement("tr");
+  detail.className="detail-row";
+  detail.innerHTML=`
+    <td colspan="4">
+      <b>Description:</b> ${item.description}<br>
+      <b>Fine:</b> ${item.fine}<br>
+      <b>Jail Time:</b> ${item.jail}
+    </td>
+  `;
+
+  row.after(detail);
 }
 
-function showPass(show){
-  document.getElementById("pass").type = show ? "text" : "password";
-}
+window.onload=()=>render();
 
-/* ACCORDION */
-function toggleDetail(el){
-  const next=el.nextElementSibling;
-  next.style.display = next.style.display==="block" ? "none" : "block";
-}
-
-/* DATA */
-
-const tenCodes = {
-"10-0":"Use caution",
-"10-4":"Acknowledged",
-"10-11":"Traffic stop",
-"10-15":"Prisoner in custody",
-"10-20":"Location",
-"10-23":"On scene",
-"10-24":"Request backup",
-"10-31":"Crime in progress",
-"10-32":"Subject with firearm",
-"10-38":"Traffic stop",
-"10-80":"Pursuit in progress",
-"10-99":"Officer in danger"
-};
-
-const laws = {
-"F-101 Assault":"Intentional threat or harm toward another individual.",
-"F-102 Armed Robbery":"Theft involving use of a weapon.",
-"F-103 Grand Theft Auto":"Unlawful taking of a vehicle.",
-"F-104 Drug Distribution":"Possession with intent to distribute narcotics.",
-"M-201 Resisting Arrest":"Attempting to evade lawful custody.",
-"M-202 Disorderly Conduct":"Public disruptive behavior.",
-"M-203 Reckless Driving":"Operating vehicle with disregard for safety.",
-"I-301 Speeding":"Exceeding posted speed limit.",
-"I-302 Parking Violation":"Illegal vehicle parking."
-};
-
-const sop = {
-"Officer Conduct":"Act professionally at all times. Abuse of power results in removal.",
-"Chain of Command":"Disputes go through Internal Affairs.",
-"Use of Force":"Minimum force necessary. Deadly force requires review.",
-"Pursuit Policy":"Supervisor approval required.",
-"Reporting":"All major incidents require documentation."
-};
-
-function buildSection(id,data){
-  const section=document.getElementById(id);
-  for(let key in data){
-    const item=document.createElement("div");
-    item.className="item";
-    item.innerText=key;
-    item.onclick=()=>toggleDetail(item);
-
-    const detail=document.createElement("div");
-    detail.className="details";
-    detail.innerText=data[key];
-
-    section.appendChild(item);
-    section.appendChild(detail);
-  }
-}
-
-window.onload=function(){
-  buildSection("tenSection",tenCodes);
-  buildSection("lawSection",laws);
-  buildSection("sopSection",sop);
-};
 </script>
 </head>
 
 <body>
 
-<div id="login">
-  <div id="loginBox">
-    <h2>Philadelphia Police Department</h2>
-    <div class="password-wrap">
-      <input id="pass" type="password">
-      <span class="eye"
-        onmousedown="showPass(true)"
-        onmouseup="showPass(false)"
-        onmouseleave="showPass(false)">👁</span>
-    </div>
-    <button onclick="checkLogin()">Enter</button>
-  </div>
-</div>
+<div class="header">Philly RP v3 CAD — Law & 10-Code Database</div>
 
 <div class="container">
   <div class="sidebar">
+    <h4>Search Database</h4>
+    <input type="text" placeholder="Search by code or name"
+      oninput="render(this.value.toLowerCase())">
+  </div>
 
-    <div class="section">
-      <h3>10 Codes</h3>
-      <div id="tenSection"></div>
-    </div>
-
-    <div class="section">
-      <h3>Laws</h3>
-      <div id="lawSection"></div>
-    </div>
-
-    <div class="section">
-      <h3>SOP Reminder</h3>
-      <div id="sopSection"></div>
-    </div>
-
+  <div class="main">
+    <table>
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Lvl</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
   </div>
 </div>
 
