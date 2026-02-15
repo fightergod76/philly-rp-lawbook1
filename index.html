@@ -2,25 +2,71 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Philly RP v3 CAD</title>
 
 <style>
+:root {
+  --bg: #f3f4f6;
+  --card: white;
+  --text: #111827;
+  --accent: #1f3a5f;
+}
+
+body.dark {
+  --bg: #0f172a;
+  --card: #1e293b;
+  --text: #f3f4f6;
+  --accent: #0b3d91;
+}
+
 body {
   margin: 0;
   font-family: "Segoe UI", Arial, sans-serif;
-  background: #f3f4f6;
-  color: #111827;
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* LOGIN */
+#loginGate {
+  position: fixed;
+  inset: 0;
+  background: #111827;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 9999;
+}
+
+#loginGate input {
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  margin-top: 10px;
+}
+
+#loginGate button {
+  margin-top: 10px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
 }
 
 /* HEADER */
 .header {
   height: 56px;
-  background: #1f3a5f;
+  background: var(--accent);
   color: white;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0 20px;
-  font-size: 18px;
   font-weight: 600;
 }
 
@@ -33,21 +79,35 @@ body {
 /* SIDEBAR */
 .sidebar {
   width: 260px;
-  background: #e5e7eb;
+  background: var(--card);
   border-right: 1px solid #d1d5db;
   padding: 14px;
+  overflow-y: auto;
 }
 
-.sidebar h4 {
+.dropdown {
   margin-bottom: 10px;
 }
 
-.sidebar input {
+.dropdown button {
   width: 100%;
+  background: #334155;
+  color: white;
   padding: 8px;
+  border: none;
+  text-align: left;
+  cursor: pointer;
   border-radius: 4px;
-  border: 1px solid #9ca3af;
-  font-size: 14px;
+}
+
+.dropdown-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.dropdown-content.show {
+  max-height: 500px;
 }
 
 /* MAIN */
@@ -61,7 +121,7 @@ body {
 table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
+  background: var(--card);
 }
 
 th, td {
@@ -69,17 +129,8 @@ th, td {
   border-bottom: 1px solid #e5e7eb;
 }
 
-th {
-  background: #f9fafb;
-  text-align: left;
-}
-
-tr {
-  transition: background 0.15s ease;
-}
-
 tr:hover {
-  background: #eef2ff;
+  background: #3b82f633;
   cursor: pointer;
 }
 
@@ -94,137 +145,123 @@ tr:hover {
 .arrest { background:#dcfce7; color:#065f46; }
 .cite { background:#fef3c7; color:#92400e; }
 
-/* DETAILS PANEL */
+/* DETAILS */
 .details {
   margin-top: 16px;
-  background: white;
+  background: var(--card);
   border: 1px solid #d1d5db;
   padding: 14px;
   opacity: 0;
   transform: translateY(-8px);
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transition: 0.25s ease;
 }
 
 .details.show {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* LANDING */
+#landing {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.landing-btn {
+  padding: 14px 30px;
+  font-size: 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: #1f3a5f;
+  color: white;
+}
 </style>
 
 <script>
+
+/* ACCESS CONTROL */
+function checkAccess() {
+  const input = document.getElementById("accessInput").value;
+  if (input === "FEBPHILLYRPV3POLICE") {
+    localStorage.setItem("philly_access","yes");
+    document.getElementById("loginGate").style.display="none";
+  } else {
+    alert("Invalid Code");
+  }
+}
+
+window.onload = () => {
+  if(localStorage.getItem("philly_access")==="yes"){
+    document.getElementById("loginGate").style.display="none";
+  }
+  if(localStorage.getItem("theme")==="dark"){
+    document.body.classList.add("dark");
+  }
+  render();
+};
+
+/* THEME TOGGLE */
+function toggleTheme(){
+  document.body.classList.toggle("dark");
+  localStorage.setItem("theme",
+    document.body.classList.contains("dark") ? "dark" : "light");
+}
+
+/* DROPDOWN */
+function toggleDropdown(id){
+  const el = document.getElementById(id);
+  el.classList.toggle("show");
+  localStorage.setItem(id, el.classList.contains("show"));
+}
+
+function restoreDropdowns(){
+  document.querySelectorAll(".dropdown-content").forEach(el=>{
+    if(localStorage.getItem(el.id)==="true"){
+      el.classList.add("show");
+    }
+  });
+}
+
+/* LAW DATABASE */
 const laws = [
-
-/* ───── DISTURBANCE & PUBLIC ORDER (10) ───── */
 {code:"DC-01", name:"Disorderly Conduct", level:"M", type:"Arrest", elements:["Disruptive public behavior"]},
-{code:"DC-02", name:"Public Disturbance", level:"M", type:"Arrest", elements:["Loud or aggressive conduct"]},
-{code:"DC-03", name:"Unlawful Assembly", level:"M", type:"Arrest", elements:["Failure to disperse"]},
-{code:"DC-04", name:"Failure to Obey Lawful Order", level:"M", type:"Arrest", elements:["Refusal of lawful command"]},
-{code:"DC-05", name:"Harassment", level:"M", type:"Arrest", elements:["Repeated unwanted actions"]},
-{code:"DC-06", name:"Loitering", level:"I", type:"Citation", elements:["Remaining without purpose"]},
-{code:"DC-07", name:"Panhandling Aggressively", level:"M", type:"Arrest", elements:["Threatening solicitation"]},
-{code:"DC-08", name:"False Emergency Report", level:"F", type:"Arrest", elements:["Knowingly false report"]},
-{code:"DC-09", name:"Public Nuisance", level:"M", type:"Arrest", elements:["Interferes with public safety"]},
-{code:"DC-10", name:"Riot Participation", level:"F", type:"Arrest", elements:["Violent group conduct"]},
-
-/* ───── INTOXICATION & NARCOTICS (12) ───── */
-{code:"INT-01", name:"Public Intoxication", level:"M", type:"Arrest", elements:["Impaired in public"]},
-{code:"INT-02", name:"DUI", level:"F", type:"Arrest", elements:["Operating vehicle while impaired"]},
-{code:"INT-03", name:"Drug Possession (Low)", level:"M", type:"Arrest", elements:["Small quantity"]},
-{code:"INT-04", name:"Drug Possession (High)", level:"F", type:"Arrest", elements:["Large quantity"]},
-{code:"INT-05", name:"Possession w/ Intent to Distribute", level:"F", type:"Arrest", elements:["Packaging or scales"]},
-{code:"INT-06", name:"Drug Paraphernalia", level:"M", type:"Arrest", elements:["Use equipment"]},
-{code:"INT-07", name:"Controlled Substance Manufacturing", level:"F", type:"Arrest", elements:["Illegal production"]},
-{code:"INT-08", name:"Selling Controlled Substances", level:"F", type:"Arrest", elements:["Distribution"]},
-{code:"INT-09", name:"Under the Influence (Non-Vehicle)", level:"M", type:"Arrest", elements:["Impaired behavior"]},
-{code:"INT-10", name:"Open Container", level:"I", type:"Citation", elements:["Alcohol in public"]},
-{code:"INT-11", name:"Minor in Possession", level:"M", type:"Arrest", elements:["Underage alcohol"]},
-{code:"INT-12", name:"Drug House Operation", level:"F", type:"Arrest", elements:["Location for narcotics"]},
-
-/* ───── TRAFFIC & VEHICLE (14) ───── */
-{code:"TR-01", name:"Speeding", level:"I", type:"Citation", elements:["Above limit"]},
-{code:"TR-02", name:"Reckless Driving", level:"M", type:"Arrest", elements:["Disregard safety"]},
-{code:"TR-03", name:"Evading Law Enforcement", level:"F", type:"Arrest", elements:["Failure to stop"]},
-{code:"TR-04", name:"Hit and Run", level:"F", type:"Arrest", elements:["Leaving collision"]},
-{code:"TR-05", name:"Driving While Suspended", level:"M", type:"Arrest", elements:["Invalid license"]},
-{code:"TR-06", name:"Street Racing", level:"F", type:"Arrest", elements:["Illegal race"]},
-{code:"TR-07", name:"Failure to Yield Emergency Vehicle", level:"M", type:"Arrest", elements:["Did not yield"]},
-{code:"TR-08", name:"Improper Lane Change", level:"I", type:"Citation", elements:["Unsafe lane change"]},
-{code:"TR-09", name:"Running Red Light", level:"I", type:"Citation", elements:["Signal violation"]},
-{code:"TR-10", name:"Driving Without Insurance", level:"M", type:"Arrest", elements:["No coverage"]},
-{code:"TR-11", name:"Vehicular Assault", level:"F", type:"Arrest", elements:["Injury caused"]},
-{code:"TR-12", name:"Vehicular Manslaughter", level:"F", type:"Arrest", elements:["Fatal collision"]},
-{code:"TR-13", name:"Illegal Vehicle Modification", level:"M", type:"Arrest", elements:["Unauthorized mod"]},
-{code:"TR-14", name:"Stolen Vehicle Operation", level:"F", type:"Arrest", elements:["Driving stolen car"]},
-
-/* ───── WEAPONS (10) ───── */
-{code:"WP-01", name:"Brandishing Weapon", level:"F", type:"Arrest", elements:["Threat display"]},
-{code:"WP-02", name:"Illegal Firearm Possession", level:"F", type:"Arrest", elements:["Prohibited weapon"]},
-{code:"WP-03", name:"Discharge of Firearm in City Limits", level:"F", type:"Arrest", elements:["Unlawful discharge"]},
-{code:"WP-04", name:"Possession of Automatic Weapon", level:"F", type:"Arrest", elements:["Illegal firearm"]},
-{code:"WP-05", name:"Possession of Explosives", level:"F", type:"Arrest", elements:["Explosive device"]},
-{code:"WP-06", name:"Weapon Trafficking", level:"F", type:"Arrest", elements:["Distribution"]},
-{code:"WP-07", name:"Possession by Prohibited Person", level:"F", type:"Arrest", elements:["Restricted individual"]},
-{code:"WP-08", name:"Unlawful Weapon Modification", level:"F", type:"Arrest", elements:["Illegal mod"]},
-{code:"WP-09", name:"Concealed Weapon Violation", level:"M", type:"Arrest", elements:["No permit"]},
-{code:"WP-10", name:"Armed Robbery Enhancement", level:"F", type:"Arrest", elements:["Weapon used"]},
-
-/* ───── PROPERTY & PERSONS (14) ───── */
+{code:"TR-01", name:"Speeding", level:"I", type:"Citation", elements:["Above speed limit"]},
+{code:"WP-01", name:"Illegal Firearm Possession", level:"F", type:"Arrest", elements:["Unregistered weapon"]},
 {code:"PR-01", name:"Theft", level:"M", type:"Arrest", elements:["Taking property"]},
-{code:"PR-02", name:"Burglary", level:"F", type:"Arrest", elements:["Unlawful entry"]},
-{code:"PR-03", name:"Robbery", level:"F", type:"Arrest", elements:["Force or threat"]},
-{code:"PR-04", name:"Vandalism", level:"M", type:"Arrest", elements:["Property damage"]},
-{code:"PR-05", name:"Trespassing", level:"M", type:"Arrest", elements:["Unauthorized entry"]},
-{code:"PR-06", name:"Arson", level:"F", type:"Arrest", elements:["Intentional fire"]},
-{code:"PS-01", name:"Assault", level:"M", type:"Arrest", elements:["Threat of harm"]},
-{code:"PS-02", name:"Battery", level:"M", type:"Arrest", elements:["Physical contact"]},
-{code:"PS-03", name:"Aggravated Assault", level:"F", type:"Arrest", elements:["Serious injury"]},
-{code:"PS-04", name:"Domestic Violence", level:"F", type:"Arrest", elements:["Household violence"]},
-{code:"PS-05", name:"Kidnapping", level:"F", type:"Arrest", elements:["Unlawful restraint"]},
-{code:"PS-06", name:"Menacing", level:"M", type:"Arrest", elements:["Fear induced"]},
-{code:"PS-07", name:"Criminal Threats", level:"F", type:"Arrest", elements:["Threatening death"]},
-{code:"PS-08", name:"Sexual Assault", level:"F", type:"Arrest", elements:["Non-consensual act"]},
-
-/* ───── JUSTICE / ADMIN (10) ───── */
 {code:"JU-01", name:"Resisting Arrest", level:"M", type:"Arrest", elements:["Physical resistance"]},
-{code:"JU-02", name:"Obstruction of Justice", level:"F", type:"Arrest", elements:["Interference"]},
-{code:"JU-03", name:"Providing False Identification", level:"M", type:"Arrest", elements:["False identity"]},
-{code:"JU-04", name:"Failure to Appear", level:"F", type:"Arrest", elements:["Court no-show"]},
-{code:"JU-05", name:"Witness Intimidation", level:"F", type:"Arrest", elements:["Threats"]},
-{code:"JU-06", name:"Escape from Custody", level:"F", type:"Arrest", elements:["Flee custody"]},
-{code:"JU-07", name:"Tampering with Evidence", level:"F", type:"Arrest", elements:["Destroy evidence"]},
-{code:"JU-08", name:"False Report to Police", level:"F", type:"Arrest", elements:["Knowingly false info"]},
-{code:"JU-09", name:"Impersonating Law Enforcement", level:"F", type:"Arrest", elements:["Pretending officer"]},
-{code:"JU-10", name:"Contempt of Court", level:"M", type:"Arrest", elements:["Disobey court"]},
-
+{code:"INT-02", name:"DUI", level:"F", type:"Arrest", elements:["Operating vehicle impaired"]},
+{code:"PS-04", name:"Domestic Violence", level:"F", type:"Arrest", elements:["Household assault"]},
+{code:"TR-03", name:"Evading Law Enforcement", level:"F", type:"Arrest", elements:["Failure to stop"]},
+{code:"PR-02", name:"Burglary", level:"F", type:"Arrest", elements:["Unlawful entry"]},
+{code:"WP-03", name:"Discharge of Firearm", level:"F", type:"Arrest", elements:["Unlawful discharge"]}
 ];
 
-
-
-
-function render(filter="") {
+function render(){
   const tbody = document.getElementById("tbody");
-  tbody.innerHTML = "";
-  laws.filter(l =>
-    l.name.toLowerCase().includes(filter) ||
-    l.code.toLowerCase().includes(filter)
-  ).forEach(l => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
+  tbody.innerHTML="";
+  laws.forEach(l=>{
+    const row=document.createElement("tr");
+    row.innerHTML=`
       <td>${l.code}</td>
       <td>${l.name}</td>
       <td>${l.level}</td>
       <td><span class="badge ${l.type==="Arrest"?"arrest":"cite"}">${l.type}</span></td>
     `;
-    row.onclick = () => showDetails(l);
+    row.onclick=()=>showDetails(l);
     tbody.appendChild(row);
   });
 }
 
-function showDetails(law) {
-  const d = document.getElementById("details");
+function showDetails(law){
+  const d=document.getElementById("details");
   d.classList.remove("show");
   void d.offsetWidth;
-  d.innerHTML = `
+  d.innerHTML=`
     <h3>${law.name} (${law.code})</h3>
     <p><b>Level:</b> ${law.level}</p>
     <p><b>Type:</b> ${law.type}</p>
@@ -233,19 +270,37 @@ function showDetails(law) {
   d.classList.add("show");
 }
 
-window.onload = () => render();
 </script>
 </head>
 
 <body>
 
-<div class="header">Philly RP v3 CAD — Law Database</div>
+<div id="loginGate">
+<h2>Philadelphia Police Department</h2>
+<p>Enter Access Code</p>
+<input id="accessInput" type="password">
+<button onclick="checkAccess()">Enter</button>
+</div>
+
+<div class="header">
+  Philly RP v3 CAD — Law Portal
+  <button onclick="toggleTheme()">🌙 / ☀</button>
+</div>
 
 <div class="container">
   <div class="sidebar">
-    <h4>Search Laws</h4>
-    <input type="text" placeholder="Search by name or code"
-      oninput="render(this.value.toLowerCase())">
+
+    <div class="dropdown">
+      <button onclick="toggleDropdown('drop1')">Law Categories</button>
+      <div class="dropdown-content" id="drop1">
+        <p>Disturbance</p>
+        <p>Traffic</p>
+        <p>Weapons</p>
+        <p>Property</p>
+        <p>Justice</p>
+      </div>
+    </div>
+
   </div>
 
   <div class="main">
@@ -266,6 +321,10 @@ window.onload = () => render();
     </div>
   </div>
 </div>
+
+<script>
+restoreDropdowns();
+</script>
 
 </body>
 </html>
