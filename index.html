@@ -1,330 +1,221 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Philly RP v3 CAD</title>
 
 <style>
-:root {
-  --bg: #f3f4f6;
-  --card: white;
-  --text: #111827;
-  --accent: #1f3a5f;
-}
-
-body.dark {
-  --bg: #0f172a;
-  --card: #1e293b;
-  --text: #f3f4f6;
-  --accent: #0b3d91;
-}
-
 body {
-  margin: 0;
-  font-family: "Segoe UI", Arial, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  transition: background 0.3s ease, color 0.3s ease;
+  margin:0;
+  font-family:Segoe UI, Arial;
+  background:#0f172a;
+  color:white;
 }
 
 /* LOGIN */
-#loginGate {
-  position: fixed;
-  inset: 0;
-  background: #111827;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  z-index: 9999;
+#login {
+  position:fixed;
+  inset:0;
+  background:#0f172a;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  z-index:999;
 }
 
-#loginGate input {
-  padding: 10px;
-  border-radius: 6px;
-  border: none;
-  margin-top: 10px;
+#loginBox {
+  background:#1e293b;
+  padding:30px;
+  border-radius:10px;
+  text-align:center;
 }
 
-#loginGate button {
-  margin-top: 10px;
-  padding: 8px 14px;
-  border: none;
-  border-radius: 6px;
-  background: #2563eb;
-  color: white;
-  cursor: pointer;
+.password-wrap {
+  position:relative;
+  margin-top:10px;
 }
 
-/* HEADER */
-.header {
-  height: 56px;
-  background: var(--accent);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-  font-weight: 600;
+.password-wrap input {
+  padding:10px;
+  border-radius:6px;
+  border:none;
+  width:220px;
+}
+
+.eye {
+  position:absolute;
+  right:10px;
+  top:8px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.eye:active {
+  transform:scale(1.2);
+  filter:drop-shadow(0 0 6px cyan);
 }
 
 /* LAYOUT */
 .container {
-  display: flex;
-  height: calc(100vh - 56px);
+  display:flex;
+  height:100vh;
 }
 
-/* SIDEBAR */
 .sidebar {
-  width: 260px;
-  background: var(--card);
-  border-right: 1px solid #d1d5db;
-  padding: 14px;
-  overflow-y: auto;
+  width:320px;
+  background:#1e293b;
+  overflow-y:auto;
+  padding:15px;
 }
 
-.dropdown {
-  margin-bottom: 10px;
+.section {
+  margin-bottom:20px;
 }
 
-.dropdown button {
-  width: 100%;
-  background: #334155;
-  color: white;
-  padding: 8px;
-  border: none;
-  text-align: left;
-  cursor: pointer;
-  border-radius: 4px;
+.item {
+  padding:8px;
+  background:#334155;
+  margin-bottom:4px;
+  border-radius:5px;
+  cursor:pointer;
+  transition:0.2s;
 }
 
-.dropdown-content {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
+.item:hover {
+  background:#475569;
 }
 
-.dropdown-content.show {
-  max-height: 500px;
-}
-
-/* MAIN */
-.main {
-  flex: 1;
-  padding: 16px;
-  overflow-y: auto;
-}
-
-/* TABLE */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: var(--card);
-}
-
-th, td {
-  padding: 10px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-tr:hover {
-  background: #3b82f633;
-  cursor: pointer;
-}
-
-/* BADGES */
-.badge {
-  padding: 4px 8px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.arrest { background:#dcfce7; color:#065f46; }
-.cite { background:#fef3c7; color:#92400e; }
-
-/* DETAILS */
 .details {
-  margin-top: 16px;
-  background: var(--card);
-  border: 1px solid #d1d5db;
-  padding: 14px;
-  opacity: 0;
-  transform: translateY(-8px);
-  transition: 0.25s ease;
-}
-
-.details.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* LANDING */
-#landing {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.landing-btn {
-  padding: 14px 30px;
-  font-size: 18px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  background: #1f3a5f;
-  color: white;
+  background:#0f172a;
+  padding:8px;
+  border-left:3px solid #3b82f6;
+  margin-bottom:6px;
+  display:none;
 }
 </style>
 
 <script>
 
-/* ACCESS CONTROL */
-function checkAccess() {
-  const input = document.getElementById("accessInput").value;
-  if (input === "FEBPHILLYRPV3POLICE") {
-    localStorage.setItem("philly_access","yes");
-    document.getElementById("loginGate").style.display="none";
+const password="FEBPHILLYRPV3POLICE";
+
+/* LOGIN */
+function checkLogin(){
+  if(document.getElementById("pass").value===password){
+    document.getElementById("login").style.display="none";
   } else {
     alert("Invalid Code");
   }
 }
 
-window.onload = () => {
-  if(localStorage.getItem("philly_access")==="yes"){
-    document.getElementById("loginGate").style.display="none";
-  }
-  if(localStorage.getItem("theme")==="dark"){
-    document.body.classList.add("dark");
-  }
-  render();
+function showPass(show){
+  document.getElementById("pass").type = show ? "text" : "password";
+}
+
+/* ACCORDION */
+function toggleDetail(el){
+  const next=el.nextElementSibling;
+  next.style.display = next.style.display==="block" ? "none" : "block";
+}
+
+/* DATA */
+
+const tenCodes = {
+"10-0":"Use caution",
+"10-4":"Acknowledged",
+"10-11":"Traffic stop",
+"10-15":"Prisoner in custody",
+"10-20":"Location",
+"10-23":"On scene",
+"10-24":"Request backup",
+"10-31":"Crime in progress",
+"10-32":"Subject with firearm",
+"10-38":"Traffic stop",
+"10-80":"Pursuit in progress",
+"10-99":"Officer in danger"
 };
 
-/* THEME TOGGLE */
-function toggleTheme(){
-  document.body.classList.toggle("dark");
-  localStorage.setItem("theme",
-    document.body.classList.contains("dark") ? "dark" : "light");
+const laws = {
+"F-101 Assault":"Intentional threat or harm toward another individual.",
+"F-102 Armed Robbery":"Theft involving use of a weapon.",
+"F-103 Grand Theft Auto":"Unlawful taking of a vehicle.",
+"F-104 Drug Distribution":"Possession with intent to distribute narcotics.",
+"M-201 Resisting Arrest":"Attempting to evade lawful custody.",
+"M-202 Disorderly Conduct":"Public disruptive behavior.",
+"M-203 Reckless Driving":"Operating vehicle with disregard for safety.",
+"I-301 Speeding":"Exceeding posted speed limit.",
+"I-302 Parking Violation":"Illegal vehicle parking."
+};
+
+const sop = {
+"Officer Conduct":"Act professionally at all times. Abuse of power results in removal.",
+"Chain of Command":"Disputes go through Internal Affairs.",
+"Use of Force":"Minimum force necessary. Deadly force requires review.",
+"Pursuit Policy":"Supervisor approval required.",
+"Reporting":"All major incidents require documentation."
+};
+
+function buildSection(id,data){
+  const section=document.getElementById(id);
+  for(let key in data){
+    const item=document.createElement("div");
+    item.className="item";
+    item.innerText=key;
+    item.onclick=()=>toggleDetail(item);
+
+    const detail=document.createElement("div");
+    detail.className="details";
+    detail.innerText=data[key];
+
+    section.appendChild(item);
+    section.appendChild(detail);
+  }
 }
 
-/* DROPDOWN */
-function toggleDropdown(id){
-  const el = document.getElementById(id);
-  el.classList.toggle("show");
-  localStorage.setItem(id, el.classList.contains("show"));
-}
-
-function restoreDropdowns(){
-  document.querySelectorAll(".dropdown-content").forEach(el=>{
-    if(localStorage.getItem(el.id)==="true"){
-      el.classList.add("show");
-    }
-  });
-}
-
-/* LAW DATABASE */
-const laws = [
-{code:"DC-01", name:"Disorderly Conduct", level:"M", type:"Arrest", elements:["Disruptive public behavior"]},
-{code:"TR-01", name:"Speeding", level:"I", type:"Citation", elements:["Above speed limit"]},
-{code:"WP-01", name:"Illegal Firearm Possession", level:"F", type:"Arrest", elements:["Unregistered weapon"]},
-{code:"PR-01", name:"Theft", level:"M", type:"Arrest", elements:["Taking property"]},
-{code:"JU-01", name:"Resisting Arrest", level:"M", type:"Arrest", elements:["Physical resistance"]},
-{code:"INT-02", name:"DUI", level:"F", type:"Arrest", elements:["Operating vehicle impaired"]},
-{code:"PS-04", name:"Domestic Violence", level:"F", type:"Arrest", elements:["Household assault"]},
-{code:"TR-03", name:"Evading Law Enforcement", level:"F", type:"Arrest", elements:["Failure to stop"]},
-{code:"PR-02", name:"Burglary", level:"F", type:"Arrest", elements:["Unlawful entry"]},
-{code:"WP-03", name:"Discharge of Firearm", level:"F", type:"Arrest", elements:["Unlawful discharge"]}
-];
-
-function render(){
-  const tbody = document.getElementById("tbody");
-  tbody.innerHTML="";
-  laws.forEach(l=>{
-    const row=document.createElement("tr");
-    row.innerHTML=`
-      <td>${l.code}</td>
-      <td>${l.name}</td>
-      <td>${l.level}</td>
-      <td><span class="badge ${l.type==="Arrest"?"arrest":"cite"}">${l.type}</span></td>
-    `;
-    row.onclick=()=>showDetails(l);
-    tbody.appendChild(row);
-  });
-}
-
-function showDetails(law){
-  const d=document.getElementById("details");
-  d.classList.remove("show");
-  void d.offsetWidth;
-  d.innerHTML=`
-    <h3>${law.name} (${law.code})</h3>
-    <p><b>Level:</b> ${law.level}</p>
-    <p><b>Type:</b> ${law.type}</p>
-    <ul>${law.elements.map(e=>`<li>${e}</li>`).join("")}</ul>
-  `;
-  d.classList.add("show");
-}
-
+window.onload=function(){
+  buildSection("tenSection",tenCodes);
+  buildSection("lawSection",laws);
+  buildSection("sopSection",sop);
+};
 </script>
 </head>
 
 <body>
 
-<div id="loginGate">
-<h2>Philadelphia Police Department</h2>
-<p>Enter Access Code</p>
-<input id="accessInput" type="password">
-<button onclick="checkAccess()">Enter</button>
-</div>
-
-<div class="header">
-  Philly RP v3 CAD — Law Portal
-  <button onclick="toggleTheme()">🌙 / ☀</button>
+<div id="login">
+  <div id="loginBox">
+    <h2>Philadelphia Police Department</h2>
+    <div class="password-wrap">
+      <input id="pass" type="password">
+      <span class="eye"
+        onmousedown="showPass(true)"
+        onmouseup="showPass(false)"
+        onmouseleave="showPass(false)">👁</span>
+    </div>
+    <button onclick="checkLogin()">Enter</button>
+  </div>
 </div>
 
 <div class="container">
   <div class="sidebar">
 
-    <div class="dropdown">
-      <button onclick="toggleDropdown('drop1')">Law Categories</button>
-      <div class="dropdown-content" id="drop1">
-        <p>Disturbance</p>
-        <p>Traffic</p>
-        <p>Weapons</p>
-        <p>Property</p>
-        <p>Justice</p>
-      </div>
+    <div class="section">
+      <h3>10 Codes</h3>
+      <div id="tenSection"></div>
     </div>
 
-  </div>
-
-  <div class="main">
-    <table>
-      <thead>
-        <tr>
-          <th>Code</th>
-          <th>Charge</th>
-          <th>Lvl</th>
-          <th>Type</th>
-        </tr>
-      </thead>
-      <tbody id="tbody"></tbody>
-    </table>
-
-    <div id="details" class="details">
-      <i>Select a law to view details.</i>
+    <div class="section">
+      <h3>Laws</h3>
+      <div id="lawSection"></div>
     </div>
+
+    <div class="section">
+      <h3>SOP Reminder</h3>
+      <div id="sopSection"></div>
+    </div>
+
   </div>
 </div>
-
-<script>
-restoreDropdowns();
-</script>
 
 </body>
 </html>
